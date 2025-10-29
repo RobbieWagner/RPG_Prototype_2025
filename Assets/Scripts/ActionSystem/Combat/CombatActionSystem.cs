@@ -13,13 +13,7 @@ using System.Collections;
 namespace RobbieWagnerGames.RPG
 {
 
-    public enum  ReactionTiming
-    {
-        PRE,
-        POST
-    }
-
-    public class ActionSystem : MonoBehaviourSingleton<ActionSystem>
+    public class CombatActionSystem : MonoBehaviourSingleton<CombatActionSystem>
     {
         private List<GameAction> reactions = null;
         public bool IsPerforming {get; private set;} = false;
