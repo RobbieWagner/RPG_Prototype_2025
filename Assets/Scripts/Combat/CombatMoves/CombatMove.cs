@@ -11,7 +11,7 @@ namespace RobbieWagnerGames.RPG
         public string moveName = "New Move";
         public Sprite moveIcon = null;
         public int moveCost = 0;
-        public List<GameAction> moveActions = new();
+        [HideInInspector] public List<GameAction> moveActions = new();
         [TextArea] public string description;
 
         public bool targetsAllOpposition;
@@ -28,5 +28,28 @@ namespace RobbieWagnerGames.RPG
         [ContextMenu(nameof(AddBuffEffect))] void AddBuffEffect() { effects.Add(new Buff()); }
         [ContextMenu(nameof(AddDebuffEffect))] void AddDebuffEffect() { effects.Add(new Debuff()); }
         [ContextMenu(nameof(Clear))] void Clear() { effects.Clear(); }
+
+        public void BuildMoveActions()
+        {
+            moveActions.Clear();
+            foreach (MoveEffect effect in effects)
+            {
+                switch(effect)
+                {
+                    case Attack attack:
+                        moveActions.Add(new MakeAttackCA(attack));
+                        break;
+                    case Heal heal:
+                        moveActions.Add(new HealUnitCA(heal));
+                        break;
+                    case Buff buff:
+                        moveActions.Add(new BuffUnitCA(buff));
+                        break;
+                    case Debuff debuff:
+                        moveActions.Add(new DebuffUnitCA(debuff));
+                        break;
+                }
+            }
+        }
     }
 }
