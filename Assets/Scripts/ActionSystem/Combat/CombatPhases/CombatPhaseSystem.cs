@@ -33,13 +33,17 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator StartCombatPerformer(StartCombatCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
+            Debug.Log($"{action.GetType().Name} performed.");
+            // instantiate the units
+            // place them on the field
+            // load their stats and show on the ui
         }
 
         private IEnumerator EndCombatPerformer(EndCombatCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
+            Debug.Log($"{action.GetType().Name} performed.");
+            // destroy field units, clear ui, tell the combat manager to end the combat
         }
 
         private IEnumerator RunPlayerPhasePerformer(RunPlayerPhaseCA action)

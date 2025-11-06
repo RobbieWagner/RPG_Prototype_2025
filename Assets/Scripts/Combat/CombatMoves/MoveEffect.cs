@@ -22,7 +22,7 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private bool failureStopsActionExecution;
         public virtual bool FailureStopsActionExecution => failureStopsActionExecution;
 
-        public virtual bool TryEffectApply(Unit user, List<Unit> targets)
+        public virtual bool TryEffectApply(UnitData user, List<UnitData> targets)
         {
             return true;
         }
@@ -35,7 +35,7 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private int power = 10;
         public int Power => power;
 
-        public override bool TryEffectApply(Unit user, List<Unit> targets)
+        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
         {
             // Implement attack logic here
             Debug.Log($"{user.unitName} attacks with power {power}!");
@@ -50,7 +50,7 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private int healAmount = 10;
         public int HealAmount => healAmount;
 
-        public override bool TryEffectApply(Unit user, List<Unit> targets)
+        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
         {
             // Implement heal logic here
             Debug.Log($"{user.unitName} heals for {healAmount}!");
@@ -67,7 +67,7 @@ namespace RobbieWagnerGames.RPG
         public StatType StatToBuff => statToBuff;
         public int BuffAmount => buffAmount;
 
-        public override bool TryEffectApply(Unit user, List<Unit> targets)
+        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
         {
             // Implement buff logic here
             Debug.Log($"{user.unitName} buffs {statToBuff} by {buffAmount}!");
@@ -84,7 +84,7 @@ namespace RobbieWagnerGames.RPG
         public StatType StatToDebuff => statToDebuff;
         public int DebuffAmount => debuffAmount;
 
-        public override bool TryEffectApply(Unit user, List<Unit> targets)
+        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
         {
             // Implement debuff logic here
             Debug.Log($"{user.unitName} debuffs {statToDebuff} by {debuffAmount}!");
