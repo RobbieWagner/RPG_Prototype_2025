@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
@@ -22,9 +23,9 @@ namespace RobbieWagnerGames.RPG
 
         [SerializeField] private CombatDetails testCombatDetails = null;
         [HideInInspector] public CombatDetails currentCombatDetails = null;
-        private Dictionary<UnitData, UnitInstance> currentPlayerUnits;
-        private Dictionary<UnitData, UnitInstance> currentEnemyUnits;
-        [SerializeField] private UnitInstance unitInstancePrefab = null;
+        private Dictionary<UnitData, Unit> currentPlayerUnits;
+        private Dictionary<UnitData, Unit> currentEnemyUnits;
+        [SerializeField] private Unit unitInstancePrefab = null;
 
         public int currentTurn = 0;
 
@@ -37,9 +38,28 @@ namespace RobbieWagnerGames.RPG
 
         public virtual void StartCombat(CombatDetails combatDetails)
         {
-            currentCombatDetails = combatDetails;
+            if(currentCombatDetails != null)
+            {
+                Debug.LogWarning("Combat is already in progress!");
+                return;
+            }
+            StartCoroutine(StartCombatCo(combatDetails));
+        }
 
+        public virtual IEnumerator StartCombatCo(CombatDetails combatDetails)
+        {
+            currentCombatDetails = combatDetails;
+            yield return null;
+            yield return SceneLoadManager.Instance.LoadSceneAdditive(combatDetails.combatSceneName, () => OnCombatSceneLoaded());
+            
             ChangeCombatState(CombatState.SETUP);
+        }
+
+        protected void OnCombatSceneLoaded()
+        {
+            SpawnCombatUnitsOnField();
+            BattlefieldController.Instance.PlaceAllies(currentPlayerUnits);
+            BattlefieldController.Instance.PlaceEnemies(currentEnemyUnits);
         }
 
         protected virtual void ChangeCombatState(CombatState newState)
@@ -92,17 +112,17 @@ namespace RobbieWagnerGames.RPG
 
         public void SpawnCombatUnitsOnField()
         {
-            currentEnemyUnits = new Dictionary<UnitData, UnitInstance>();
+            currentEnemyUnits = new Dictionary<UnitData, Unit>();
             foreach (UnitData enemyData in currentCombatDetails.enemies)
             {
-                UnitInstance enemyInstance = Instantiate(unitInstancePrefab);
+                Unit enemyInstance = Instantiate(unitInstancePrefab);
                 enemyInstance.UnitData = enemyData;
                 currentEnemyUnits.Add(enemyData, enemyInstance);
             }
-            currentPlayerUnits = new Dictionary<UnitData, UnitInstance>();
+            currentPlayerUnits = new Dictionary<UnitData, Unit>();
             foreach (UnitData allyData in currentCombatDetails.allies)
             {
-                UnitInstance allyInstance = Instantiate(unitInstancePrefab);
+                Unit allyInstance = Instantiate(unitInstancePrefab);
                 allyInstance.UnitData = allyData;
                 currentPlayerUnits.Add(allyData, allyInstance);
             }

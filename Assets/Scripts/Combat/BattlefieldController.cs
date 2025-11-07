@@ -5,35 +5,53 @@ using UnityEngine;
 namespace RobbieWagnerGames.RPG
 {
     public class BattlefieldController : MonoBehaviourSingleton<BattlefieldController>
+{
+    [SerializeField] private List<Transform> allySpawnPoints = new List<Transform>();
+    [SerializeField] private List<Transform> enemySpawnPoints = new List<Transform>();
+
+    protected override void Awake()
     {
-        [SerializeField] private List<Transform> allySpawnPoints = new List<Transform>();
-        [SerializeField] private List<Transform> enemySpawnPoints = new List<Transform>();
+        base.Awake();
+    }
 
-        protected override void Awake()
+    public void PlaceAllies(Dictionary<UnitData, Unit> allyUnits = null)
+    {
+        if (allyUnits == null) return;
+
+        int i = 0;
+        foreach (var unitPair in allyUnits)
         {
-            base.Awake();
-        }
+            if (i >= allySpawnPoints.Count) 
+                break;
 
-        public void PlaceAllies(List<Transform> allyInstances)
-        {
-            for (int i = 0; i < allyInstances.Count && i < allySpawnPoints.Count; i++)
-            {
-                Transform ally = allyInstances[i];
-                Transform spawnPoint = allySpawnPoints[i];
+            Unit unit = unitPair.Value;
+            Transform spawnPoint = allySpawnPoints[i];
 
-                ally.position = spawnPoint.position;
-            }
-        }
-
-        public void PlaceEnemies(List<Transform> enemyInstances)
-        {
-            for (int i = 0; i < enemyInstances.Count && i < enemySpawnPoints.Count; i++)
-            {
-                Transform enemy = enemyInstances[i];
-                Transform spawnPoint = enemySpawnPoints[i];
-
-                enemy.position = spawnPoint.position;
-            }
+            // Place the unit's transform at the spawn point position
+            unit.transform.position = spawnPoint.position;
+            unit.transform.parent = spawnPoint;
+            i++;
         }
     }
+
+    public void PlaceEnemies(Dictionary<UnitData, Unit> enemyUnits = null)
+    {
+        if (enemyUnits == null) return;
+
+        int i = 0;
+        foreach (var unitPair in enemyUnits)
+        {
+            if (i >= enemySpawnPoints.Count) 
+                break;
+
+            Unit unit = unitPair.Value;
+            Transform spawnPoint = enemySpawnPoints[i];
+
+            // Place the unit's transform at the spawn point position
+            unit.transform.position = spawnPoint.position;
+            unit.transform.parent = spawnPoint;
+            i++;
+        }
+    }
+}
 }

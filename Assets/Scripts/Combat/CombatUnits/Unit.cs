@@ -6,19 +6,7 @@ using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
 {
-    public class UnitData
-    {
-        public string unitName;
-        public Sprite unitIcon;
-        [SerializedDictionary("Stat", "Value")]
-        public SerializedDictionary<StatType, int> baseStats = new SerializedDictionary<StatType, int>();
-        public List<CombatMove> combatMoves = new List<CombatMove>();
-
-        // sprite path for the unit in the resources folder
-        public string unitSpriteFilePath;
-    }
-
-    public class UnitInstance : MonoBehaviour
+    public class Unit : MonoBehaviour
     {
         private UnitData unitData = null;
         public UnitData UnitData

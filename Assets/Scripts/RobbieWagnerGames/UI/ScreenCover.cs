@@ -1,4 +1,5 @@
 using DG.Tweening;
+using RobbieWagnerGames.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,19 +7,10 @@ using UnityEngine.UI;
 
 namespace RobbieWagnerGames.UI
 {
-    public class ScreenCover : MonoBehaviour
+    public class ScreenCover : MonoBehaviourSingleton<ScreenCover>
     {
         [SerializeField] private Canvas canvas;
         [SerializeField] private Image screenCover;
-
-        public static ScreenCover Instance { get; private set; }
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-                Destroy(gameObject);
-            else
-                Instance = this;
-        }
 
         public void ToggleScreenCover(bool on)
         {

@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26145a6ddb14f604aac859d7c684de6f, type: 3}
+  m_Name: DebugDetails
+  m_EditorClassIdentifier: 
+  enemies:
+  - unitName: Enemy1
+    unitIcon: {fileID: -4758990424672892328, guid: 024777d5130aeb943a3527727a476c35, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Enemy_CircleHead
+  - unitName: Enemy2
+    unitIcon: {fileID: 6513200362597483699, guid: f9e25352a98759642b6a70a556715ba8, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Enemy_SquareHead
+  - unitName: Enemy3
+    unitIcon: {fileID: 3358032771889219372, guid: e5eca2d98ca786449a46cf1baa0d253c, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Enemy_TriangleHead
+  allies:
+  - unitName: Ally1
+    unitIcon: {fileID: -7575827519946388292, guid: 6241ad749a39fba4a97aeca7fc41a9b2, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_CircleHead
+  - unitName: Ally2
+    unitIcon: {fileID: 4920052470476546372, guid: 991e39c73dd3ea0488f6b43309b0f05a, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_SquareHead
+  - unitName: Ally3
+    unitIcon: {fileID: 1276261348462191851, guid: 62e8325c5e8fb64459e6fad6f950e945, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 1
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_TriangleHead
+  useSavedAllyData: 1
+  combatSceneName: CombatScene

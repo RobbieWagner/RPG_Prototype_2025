@@ -34,9 +34,8 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null;
             Debug.Log($"{action.GetType().Name} performed.");
-            // instantiate the units
-            // place them on the field
-            // load their stats and show on the ui
+            
+            CombatManager.Instance.SpawnCombatUnitsOnField();
         }
 
         private IEnumerator EndCombatPerformer(EndCombatCA action)
