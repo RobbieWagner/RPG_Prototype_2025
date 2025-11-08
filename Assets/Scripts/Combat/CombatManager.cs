@@ -44,7 +44,7 @@ namespace RobbieWagnerGames.RPG
         private List<Unit> initiativeOrder = new List<Unit>();
         private int currentInitiativeIndex = 0;
         private Unit currentActingUnit = null;
-        
+        public Unit CurrentActingUnit => currentActingUnit;
 
         public int currentTurn = 0;
 
@@ -52,16 +52,17 @@ namespace RobbieWagnerGames.RPG
         {
             base.Awake();
 
-           StartCombat(testCombatDetails);
+            StartCombat(testCombatDetails);
         }
 
         public virtual void StartCombat(CombatDetails combatDetails)
         {
-            if(currentCombatDetails != null)
+            if (currentCombatDetails != null)
             {
                 Debug.LogWarning("Combat is already in progress!");
                 return;
             }
+
             StartCoroutine(StartCombatCo(combatDetails));
         }
 
@@ -90,8 +91,11 @@ namespace RobbieWagnerGames.RPG
                 case CombatState.SETUP:
                     CombatActionSystem.Instance.Perform(new SetupCombatCA(), () =>
                     {
-                        CombatActionSystem.Instance.Perform(new InitializeRuntimeStatsCA(allCurrentUnits), () =>
+                        InitializeRuntimeStatsCA statSetupCombatAction = new InitializeRuntimeStatsCA(allCurrentUnits);
+
+                        CombatActionSystem.Instance.Perform(statSetupCombatAction, () =>
                         {
+                            CombatHUD.Instance.InitializeHUD(currentPlayerUnits.Values.ToList(), currentEnemyUnits.Values.ToList());
                             ChangeCombatState(CombatState.TURN_START);
                         });
                     });
@@ -104,6 +108,7 @@ namespace RobbieWagnerGames.RPG
                     break;
                 case CombatState.ACTION_SELECTION:
                     currentActingUnit = initiativeOrder[currentInitiativeIndex];
+                    CombatHUD.Instance.turnTrackerUIInstance.UpdateTurnTrackerUI(currentTurn, currentActingUnit.isPlayerUnit);
                     CombatActionSystem.Instance.Perform(new RunActionSelectionPhaseCA(currentActingUnit), () =>
                     {
                         ChangeCombatState(CombatState.ACTION_EXECUTION);
@@ -158,6 +163,7 @@ namespace RobbieWagnerGames.RPG
             {
                 Unit enemyInstance = Instantiate(unitInstancePrefab);
                 enemyInstance.UnitData = enemyData;
+                enemyInstance.isPlayerUnit = false;
                 currentEnemyUnits.Add(enemyData, enemyInstance);
             }
             currentPlayerUnits = new Dictionary<UnitData, Unit>();

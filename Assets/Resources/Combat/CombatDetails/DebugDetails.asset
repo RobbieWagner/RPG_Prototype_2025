@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - unitName: Enemy1
-    unitIcon: {fileID: -4758990424672892328, guid: 024777d5130aeb943a3527727a476c35, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -26,8 +26,9 @@ MonoBehaviour:
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
     unitSpriteFilePath: UnitSprites/Enemy_CircleHead
+    unitColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   - unitName: Enemy2
-    unitIcon: {fileID: 6513200362597483699, guid: f9e25352a98759642b6a70a556715ba8, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -39,8 +40,9 @@ MonoBehaviour:
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
     unitSpriteFilePath: UnitSprites/Enemy_SquareHead
+    unitColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   - unitName: Enemy3
-    unitIcon: {fileID: 3358032771889219372, guid: e5eca2d98ca786449a46cf1baa0d253c, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -52,9 +54,10 @@ MonoBehaviour:
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
     unitSpriteFilePath: UnitSprites/Enemy_TriangleHead
+    unitColor: {r: 0.78431374, g: 0, b: 0, a: 1}
   allies:
   - unitName: Ally1
-    unitIcon: {fileID: -7575827519946388292, guid: 6241ad749a39fba4a97aeca7fc41a9b2, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -67,8 +70,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
     - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
     unitSpriteFilePath: UnitSprites/Ally_CircleHead
+    unitColor: {r: 1, g: 0.49019608, b: 1, a: 1}
   - unitName: Ally2
-    unitIcon: {fileID: 4920052470476546372, guid: 991e39c73dd3ea0488f6b43309b0f05a, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -80,8 +84,9 @@ MonoBehaviour:
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
     unitSpriteFilePath: UnitSprites/Ally_SquareHead
+    unitColor: {r: 0.49019608, g: 1, b: 1, a: 1}
   - unitName: Ally3
-    unitIcon: {fileID: 1276261348462191851, guid: 62e8325c5e8fb64459e6fad6f950e945, type: 3}
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
       _serializedList:
       - Key: 0
@@ -96,5 +101,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: f43163009db0d41468677d5e2608baf5, type: 2}
     - {fileID: 11400000, guid: 15cd435334a60f84097248cff333afa6, type: 2}
     unitSpriteFilePath: UnitSprites/Ally_TriangleHead
+    unitColor: {r: 1, g: 1, b: 0.49019608, a: 1}
   useSavedAllyData: 1
   combatSceneName: CombatScene

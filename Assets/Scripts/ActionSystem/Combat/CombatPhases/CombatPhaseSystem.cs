@@ -100,6 +100,7 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator StartTurnPerformer(StartTurnCA action)
         {
             yield return null;
+            CombatManager.Instance.currentTurn++;
             CombatManager.Instance.BuildTurnInitiativeOrder();
             Debug.Log($"{action.GetType().Name} performed.");
             foreach (Unit unit in CombatManager.Instance.allCurrentUnits)

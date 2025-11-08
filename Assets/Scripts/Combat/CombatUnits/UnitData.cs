@@ -21,5 +21,6 @@ namespace RobbieWagnerGames.RPG
 
         // sprite path for the unit in the resources folder
         public string unitSpriteFilePath = "";
+        public Color unitColor = Color.white;
     }
 }

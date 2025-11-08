@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
@@ -24,11 +23,9 @@ namespace RobbieWagnerGames.RPG
         }
 
         public Dictionary<ComputedStatType, int> runtimeStats = new Dictionary<ComputedStatType, int>();
-
-
         public SpriteRenderer unitSpriteRenderer;
-
         public CombatMove selectedCombatMove = null;
+        public bool isPlayerUnit = true;
 
         private void UpdateUnitData()
         {
@@ -40,17 +37,17 @@ namespace RobbieWagnerGames.RPG
         {
             runtimeStats.Clear();
 
-            runtimeStats.Add(ComputedStatType.STAMINA, unitData.baseStats[BaseStatType.CAT]);
-            runtimeStats.Add(ComputedStatType.ACCURACY, unitData.baseStats[BaseStatType.CAT]);
-            runtimeStats.Add(ComputedStatType.MAGIC_DEFENSE, unitData.baseStats[BaseStatType.CAT]);
+            runtimeStats.Add(ComputedStatType.STAMINA, GetComputedStatDefaultValue(ComputedStatType.STAMINA));
+            runtimeStats.Add(ComputedStatType.ACCURACY, GetComputedStatDefaultValue(ComputedStatType.ACCURACY));
+            runtimeStats.Add(ComputedStatType.MAGIC_DEFENSE, GetComputedStatDefaultValue(ComputedStatType.MAGIC_DEFENSE));
 
-            runtimeStats.Add(ComputedStatType.POWER, unitData.baseStats[BaseStatType.BOY]);
-            runtimeStats.Add(ComputedStatType.DEFENSE, unitData.baseStats[BaseStatType.BOY]);
-            runtimeStats.Add(ComputedStatType.HP, unitData.baseStats[BaseStatType.BOY] * 10);
+            runtimeStats.Add(ComputedStatType.POWER, GetComputedStatDefaultValue(ComputedStatType.POWER));
+            runtimeStats.Add(ComputedStatType.DEFENSE, GetComputedStatDefaultValue(ComputedStatType.DEFENSE));
+            runtimeStats.Add(ComputedStatType.HP, GetComputedStatDefaultValue(ComputedStatType.HP));
 
-            runtimeStats.Add(ComputedStatType.MAGIC_POWER, unitData.baseStats[BaseStatType.ISEKAI]);
-            runtimeStats.Add(ComputedStatType.CRIT_CHANCE, unitData.baseStats[BaseStatType.ISEKAI]);
-            runtimeStats.Add(ComputedStatType.INITIATIVE, unitData.baseStats[BaseStatType.ISEKAI]);
+            runtimeStats.Add(ComputedStatType.MAGIC_POWER, GetComputedStatDefaultValue(ComputedStatType.MAGIC_POWER));
+            runtimeStats.Add(ComputedStatType.CRIT_CHANCE, GetComputedStatDefaultValue(ComputedStatType.CRIT_CHANCE));
+            runtimeStats.Add(ComputedStatType.INITIATIVE, GetComputedStatDefaultValue(ComputedStatType.INITIATIVE));
         }
 
         public void ResetRuntimeStat(ComputedStatType stat)
@@ -59,42 +56,69 @@ namespace RobbieWagnerGames.RPG
             {
                 case ComputedStatType.STAMINA:
                     runtimeStats.Remove(ComputedStatType.STAMINA);
-                    runtimeStats.Add(ComputedStatType.STAMINA, unitData.baseStats[BaseStatType.CAT]);
+                    runtimeStats.Add(ComputedStatType.STAMINA, GetComputedStatDefaultValue(ComputedStatType.STAMINA));
                     break;
                 case ComputedStatType.ACCURACY:
                     runtimeStats.Remove(ComputedStatType.ACCURACY);
-                    runtimeStats.Add(ComputedStatType.ACCURACY, unitData.baseStats[BaseStatType.CAT]);
+                    runtimeStats.Add(ComputedStatType.ACCURACY, GetComputedStatDefaultValue(ComputedStatType.ACCURACY));
                     break;
                 case ComputedStatType.MAGIC_DEFENSE:
                     runtimeStats.Remove(ComputedStatType.MAGIC_DEFENSE);
-                    runtimeStats.Add(ComputedStatType.MAGIC_DEFENSE, unitData.baseStats[BaseStatType.CAT]);
+                    runtimeStats.Add(ComputedStatType.MAGIC_DEFENSE, GetComputedStatDefaultValue(ComputedStatType.MAGIC_DEFENSE));
                     break;
                 case ComputedStatType.POWER:
                     runtimeStats.Remove(ComputedStatType.POWER);
-                    runtimeStats.Add(ComputedStatType.POWER, unitData.baseStats[BaseStatType.BOY]);
+                    runtimeStats.Add(ComputedStatType.POWER, GetComputedStatDefaultValue(ComputedStatType.POWER));
                     break;
                 case ComputedStatType.DEFENSE:
                     runtimeStats.Remove(ComputedStatType.DEFENSE);
-                    runtimeStats.Add(ComputedStatType.DEFENSE, unitData.baseStats[BaseStatType.BOY]);
+                    runtimeStats.Add(ComputedStatType.DEFENSE, GetComputedStatDefaultValue(ComputedStatType.DEFENSE));
                     break;
                 case ComputedStatType.HP:
-                    runtimeStats.Remove(ComputedStatType.MAGIC_DEFENSE);
-                    runtimeStats.Add(ComputedStatType.MAGIC_DEFENSE, unitData.baseStats[BaseStatType.BOY]);
+                    runtimeStats.Remove(ComputedStatType.HP);
+                    runtimeStats.Add(ComputedStatType.HP, GetComputedStatDefaultValue(ComputedStatType.HP));
                     break;
                 case ComputedStatType.MAGIC_POWER:
                     runtimeStats.Remove(ComputedStatType.MAGIC_POWER);
-                    runtimeStats.Add(ComputedStatType.MAGIC_POWER, unitData.baseStats[BaseStatType.ISEKAI]);
+                    runtimeStats.Add(ComputedStatType.MAGIC_POWER, GetComputedStatDefaultValue(ComputedStatType.MAGIC_POWER));
                     break;
                 case ComputedStatType.CRIT_CHANCE:
                     runtimeStats.Remove(ComputedStatType.CRIT_CHANCE);
-                    runtimeStats.Add(ComputedStatType.CRIT_CHANCE, unitData.baseStats[BaseStatType.ISEKAI]);
+                    runtimeStats.Add(ComputedStatType.CRIT_CHANCE, GetComputedStatDefaultValue(ComputedStatType.CRIT_CHANCE));
                     break;
                 case ComputedStatType.INITIATIVE:
                     runtimeStats.Remove(ComputedStatType.INITIATIVE);
-                    runtimeStats.Add(ComputedStatType.INITIATIVE, unitData.baseStats[BaseStatType.ISEKAI]);
+                    runtimeStats.Add(ComputedStatType.INITIATIVE, GetComputedStatDefaultValue(ComputedStatType.INITIATIVE));
                     break;
                 default:
                     break;
+            }
+        }
+
+        public int GetComputedStatDefaultValue(ComputedStatType stat)
+        {
+            switch(stat)
+            {
+                case ComputedStatType.STAMINA:
+                    return unitData.baseStats[BaseStatType.CAT];
+                case ComputedStatType.ACCURACY:
+                    return unitData.baseStats[BaseStatType.CAT];
+                case ComputedStatType.MAGIC_DEFENSE:
+                    return unitData.baseStats[BaseStatType.CAT];
+                case ComputedStatType.POWER:
+                    return unitData.baseStats[BaseStatType.BOY];
+                case ComputedStatType.DEFENSE:
+                    return unitData.baseStats[BaseStatType.BOY];
+                case ComputedStatType.HP:
+                    return unitData.baseStats[BaseStatType.BOY] * 10;
+                case ComputedStatType.MAGIC_POWER:
+                    return unitData.baseStats[BaseStatType.ISEKAI];
+                case ComputedStatType.CRIT_CHANCE:
+                    return unitData.baseStats[BaseStatType.ISEKAI];
+                case ComputedStatType.INITIATIVE:
+                    return unitData.baseStats[BaseStatType.ISEKAI];
+                default:
+                    return -1;
             }
         }
 
