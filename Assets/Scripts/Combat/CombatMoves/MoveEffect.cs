@@ -62,9 +62,9 @@ namespace RobbieWagnerGames.RPG
     public class Buff : MoveEffect
     {
         [Header("Buff")]
-        [SerializeField] private StatType statToBuff = StatType.NONE;
+        [SerializeField] private BaseStatType statToBuff = BaseStatType.NONE;
         [SerializeField] private int buffAmount = 5;
-        public StatType StatToBuff => statToBuff;
+        public BaseStatType StatToBuff => statToBuff;
         public int BuffAmount => buffAmount;
 
         public override bool TryEffectApply(UnitData user, List<UnitData> targets)
@@ -79,9 +79,9 @@ namespace RobbieWagnerGames.RPG
     public class Debuff : MoveEffect
     {
         [Header("Debuff")]
-        [SerializeField] private StatType statToDebuff = StatType.NONE;
+        [SerializeField] private BaseStatType statToDebuff = BaseStatType.NONE;
         [SerializeField] private int debuffAmount = 5;
-        public StatType StatToDebuff => statToDebuff;
+        public BaseStatType StatToDebuff => statToDebuff;
         public int DebuffAmount => debuffAmount;
 
         public override bool TryEffectApply(UnitData user, List<UnitData> targets)

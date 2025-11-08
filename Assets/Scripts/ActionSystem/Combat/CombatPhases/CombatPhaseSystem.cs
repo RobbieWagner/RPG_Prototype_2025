@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
@@ -9,10 +11,11 @@ namespace RobbieWagnerGames.RPG
         private void OnEnable()
         {
             CombatActionSystem.AttachPerformer<StartCombatCA>(StartCombatPerformer);
+            CombatActionSystem.AttachPerformer<InitializeRuntimeStatsCA>(InitializeRuntimeStatsPerformer);
             CombatActionSystem.AttachPerformer<EndCombatCA>(EndCombatPerformer);
 
-            CombatActionSystem.AttachPerformer<RunPlayerPhaseCA>(RunPlayerPhasePerformer);
-            CombatActionSystem.AttachPerformer<RunEnemyPhaseCA>(RunEnemyPhasePerformer);
+            CombatActionSystem.AttachPerformer<RunActionSelectionPhaseCA>(RunActionSelectionPhasePerformer);
+            CombatActionSystem.AttachPerformer<RunActionExecutionPhaseCA>(RunActionExecutionPhasePerformer);
 
             CombatActionSystem.AttachPerformer<StartTurnCA>(StartTurnPerformer);
             CombatActionSystem.AttachPerformer<EndTurnCA>(EndTurnPerformer);
@@ -21,10 +24,12 @@ namespace RobbieWagnerGames.RPG
         private void OnDisable()
         {
             CombatActionSystem.DetachPerformer<StartCombatCA>();
+            
+            CombatActionSystem.DetachPerformer<InitializeRuntimeStatsCA>();
             CombatActionSystem.DetachPerformer<EndCombatCA>();
 
-            CombatActionSystem.DetachPerformer<RunPlayerPhaseCA>();
-            CombatActionSystem.DetachPerformer<RunEnemyPhaseCA>();
+            CombatActionSystem.DetachPerformer<RunActionSelectionPhaseCA>();
+            CombatActionSystem.DetachPerformer<RunActionExecutionPhaseCA>();
 
             CombatActionSystem.DetachPerformer<StartTurnCA>();
             CombatActionSystem.DetachPerformer<EndTurnCA>();
@@ -34,8 +39,17 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null;
             Debug.Log($"{action.GetType().Name} performed.");
-            
+
             CombatManager.Instance.SpawnCombatUnitsOnField();
+        }
+        
+        private IEnumerator InitializeRuntimeStatsPerformer(InitializeRuntimeStatsCA action)
+        {
+            yield return null;
+            Debug.Log($"{action.GetType().Name} performed.");
+
+            foreach (Unit unit in action.units)
+                unit.ResetRuntimeStats();
         }
 
         private IEnumerator EndCombatPerformer(EndCombatCA action)
@@ -45,13 +59,13 @@ namespace RobbieWagnerGames.RPG
             // destroy field units, clear ui, tell the combat manager to end the combat
         }
 
-        private IEnumerator RunPlayerPhasePerformer(RunPlayerPhaseCA action)
+        private IEnumerator RunActionSelectionPhasePerformer(RunActionSelectionPhaseCA action)
         {
             yield return null;
             Debug.Log($"{ action.GetType().Name } performed.");
         }
 
-        private IEnumerator RunEnemyPhasePerformer(RunEnemyPhaseCA action)
+        private IEnumerator RunActionExecutionPhasePerformer(RunActionExecutionPhaseCA action)
         {
             yield return null;
             Debug.Log($"{ action.GetType().Name } performed.");
