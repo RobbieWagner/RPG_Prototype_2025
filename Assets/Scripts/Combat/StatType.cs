@@ -22,7 +22,7 @@ namespace RobbieWagnerGames.RPG
 
         POWER,
         DEFENSE,
-        VITALITY,
+        HP,
 
         MAGIC_POWER,
         CRIT_CHANCE,

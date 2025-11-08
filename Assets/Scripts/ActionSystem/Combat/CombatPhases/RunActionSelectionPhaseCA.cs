@@ -10,7 +10,7 @@ namespace RobbieWagnerGames.RPG
         public RunActionSelectionPhaseCA(Unit currentActingUnit)
         {
             unit = currentActingUnit;
-            Debug.Log($"{unit} is now acting");
+            //Debug.Log($"{unit} is now acting");
         }
     }
 }

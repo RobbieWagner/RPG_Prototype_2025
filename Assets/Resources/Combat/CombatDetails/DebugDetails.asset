@@ -18,7 +18,7 @@ MonoBehaviour:
     baseStats:
       _serializedList:
       - Key: 0
-        Value: 1
+        Value: 2
       - Key: 1
         Value: 1
       - Key: 2
@@ -31,7 +31,7 @@ MonoBehaviour:
     baseStats:
       _serializedList:
       - Key: 0
-        Value: 1
+        Value: 0
       - Key: 1
         Value: 1
       - Key: 2
@@ -44,7 +44,7 @@ MonoBehaviour:
     baseStats:
       _serializedList:
       - Key: 0
-        Value: 1
+        Value: 0
       - Key: 1
         Value: 1
       - Key: 2
@@ -65,6 +65,7 @@ MonoBehaviour:
         Value: 1
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
     unitSpriteFilePath: UnitSprites/Ally_CircleHead
   - unitName: Ally2
     unitIcon: {fileID: 4920052470476546372, guid: 991e39c73dd3ea0488f6b43309b0f05a, type: 3}
@@ -88,9 +89,12 @@ MonoBehaviour:
       - Key: 1
         Value: 1
       - Key: 2
-        Value: 1
+        Value: 2
     combatMoves:
     - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
+    - {fileID: 11400000, guid: f43163009db0d41468677d5e2608baf5, type: 2}
+    - {fileID: 11400000, guid: 15cd435334a60f84097248cff333afa6, type: 2}
     unitSpriteFilePath: UnitSprites/Ally_TriangleHead
   useSavedAllyData: 1
   combatSceneName: CombatScene

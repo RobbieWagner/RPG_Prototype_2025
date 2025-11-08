@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -62,13 +63,32 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator RunActionSelectionPhasePerformer(RunActionSelectionPhaseCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
+
+            List<CombatMove> moves = action.unit.GetAvailableCombatMoves();
+
+            if (moves.Count == 0)
+            {
+                action.unit.runtimeStats[ComputedStatType.STAMINA] = 0;
+                yield break;
+            }
+
+            action.unit.selectedCombatMove = moves[UnityEngine.Random.Range(0, moves.Count)];
+
+            Debug.Log($"{action.unit.UnitData.unitName} selected move: {action.unit.selectedCombatMove.moveName}");
         }
 
         private IEnumerator RunActionExecutionPhasePerformer(RunActionExecutionPhaseCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
+
+            if (action.unit.selectedCombatMove == null)
+                yield break;
+
+            CombatMove move = action.unit.selectedCombatMove;
+
+            Debug.Log($"{move.moveName} executed");
+            action.unit.runtimeStats[ComputedStatType.STAMINA] -= move.moveCost; 
+            action.unit.selectedCombatMove = null;
         }
 
         private IEnumerator EndTurnPerformer(EndTurnCA action)
@@ -80,7 +100,10 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator StartTurnPerformer(StartTurnCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
+            CombatManager.Instance.BuildTurnInitiativeOrder();
+            Debug.Log($"{action.GetType().Name} performed.");
+            foreach (Unit unit in CombatManager.Instance.allCurrentUnits)
+                unit.ResetRuntimeStat(ComputedStatType.STAMINA);
         }
     }
 }

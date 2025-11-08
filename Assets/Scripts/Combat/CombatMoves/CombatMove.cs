@@ -34,7 +34,7 @@ namespace RobbieWagnerGames.RPG
             moveActions.Clear();
             foreach (MoveEffect effect in effects)
             {
-                switch(effect)
+                switch (effect)
                 {
                     case Attack attack:
                         moveActions.Add(new MakeAttackCA(attack));
@@ -50,6 +50,11 @@ namespace RobbieWagnerGames.RPG
                         break;
                 }
             }
+        }
+        
+        public virtual bool isAvailable(Unit unit)
+        {
+            return moveCost <= unit.runtimeStats[ComputedStatType.STAMINA];
         }
     }
 }

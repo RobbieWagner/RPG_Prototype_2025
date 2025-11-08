@@ -12,6 +12,8 @@ namespace RobbieWagnerGames.RPG
     {
         NONE = -1,
         SETUP,
+        TURN_START,
+        TURN_END,
         ACTION_SELECTION,
         ACTION_EXECUTION,
         WIN,
@@ -90,36 +92,46 @@ namespace RobbieWagnerGames.RPG
                     {
                         CombatActionSystem.Instance.Perform(new InitializeRuntimeStatsCA(allCurrentUnits), () =>
                         {
-                            BuildInitiativeOrder();
-                            ChangeCombatState(CombatState.ACTION_SELECTION);
+                            ChangeCombatState(CombatState.TURN_START);
                         });
                     });
                     break;
-                case CombatState.ACTION_SELECTION:
-                    if (currentInitiativeIndex == 0)
-                        CombatActionSystem.Instance.Perform(new StartTurnCA(), () =>
+                case CombatState.TURN_START:
+                    CombatActionSystem.Instance.Perform(new StartTurnCA(), () =>
                         {
-                            RunActionSelectionPhase();
+                            ChangeCombatState(CombatState.ACTION_SELECTION);
                         });
-                    else
-                        RunActionSelectionPhase();
+                    break;
+                case CombatState.ACTION_SELECTION:
+                    currentActingUnit = initiativeOrder[currentInitiativeIndex];
+                    CombatActionSystem.Instance.Perform(new RunActionSelectionPhaseCA(currentActingUnit), () =>
+                    {
+                        ChangeCombatState(CombatState.ACTION_EXECUTION);
+                    });
                     break;
                 case CombatState.ACTION_EXECUTION:
-                    CombatActionSystem.Instance.Perform(new RunActionExecutionPhaseCA(), () =>
+                    CombatActionSystem.Instance.Perform(new RunActionExecutionPhaseCA(currentActingUnit), () =>
                     {
-                        currentInitiativeIndex++;
+                        if (currentActingUnit.runtimeStats[ComputedStatType.STAMINA] == 0 
+                        || currentActingUnit.GetAvailableCombatMoves().Count == 0)
+                        {
+                            currentInitiativeIndex++;
 
-                        if (currentInitiativeIndex < initiativeOrder.Count)
+                            if (currentInitiativeIndex < initiativeOrder.Count)
+                                ChangeCombatState(CombatState.ACTION_SELECTION);
+                            else
+                                ChangeCombatState(CombatState.TURN_END);
+                        }
+                        else
                         {
                             ChangeCombatState(CombatState.ACTION_SELECTION);
                         }
-                        else
-                        { 
-                            CombatActionSystem.Instance.Perform(new EndTurnCA(), () =>
-                            {
-
-                            });
-                        }
+                    });
+                    break;
+                case CombatState.TURN_END:
+                    CombatActionSystem.Instance.Perform(new EndTurnCA(), () =>
+                    {
+                        ChangeCombatState(CombatState.TURN_START);
                     });
                     break;
                 case CombatState.WIN:
@@ -157,17 +169,7 @@ namespace RobbieWagnerGames.RPG
             }
         }
 
-        private void RunActionSelectionPhase()
-        {
-            currentActingUnit = initiativeOrder[currentInitiativeIndex];
-            CombatActionSystem.Instance.Perform(new RunActionSelectionPhaseCA(currentActingUnit), () =>
-            {
-                ChangeCombatState(CombatState.ACTION_EXECUTION);
-            });
-        }
-
-
-        private void BuildInitiativeOrder()
+        public void BuildTurnInitiativeOrder()
         {
             initiativeOrder.Clear();
 
