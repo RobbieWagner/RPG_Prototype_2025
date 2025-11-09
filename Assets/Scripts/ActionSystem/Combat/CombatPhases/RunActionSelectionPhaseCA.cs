@@ -5,12 +5,14 @@ namespace RobbieWagnerGames.RPG
 {
     public class RunActionSelectionPhaseCA : GameAction
     {
-        public Unit unit;
+        public bool useCombatManagerUnit = false;
+        private Unit unit = null;
+        public Unit Unit => useCombatManagerUnit ? CombatManager.Instance.CurrentActingUnit : unit;
 
-        public RunActionSelectionPhaseCA(Unit currentActingUnit)
+        public RunActionSelectionPhaseCA(bool usingCombatManagerUnit, Unit currentActingUnit = null)
         {
             unit = currentActingUnit;
-            //Debug.Log($"{unit} is now acting");
+            useCombatManagerUnit = usingCombatManagerUnit;
         }
     }
 }

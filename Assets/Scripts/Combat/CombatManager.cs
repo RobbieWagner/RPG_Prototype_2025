@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RobbieWagnerGames.RPG
 {
@@ -45,6 +43,14 @@ namespace RobbieWagnerGames.RPG
         private int currentInitiativeIndex = 0;
         private Unit currentActingUnit = null;
         public Unit CurrentActingUnit => currentActingUnit;
+
+        public StartCombatCA startCombatPerformer = new StartCombatCA();
+        public EndCombatCA winCombatPerformer = new EndCombatCA(true);
+        public EndCombatCA loseCombatPerformer = new EndCombatCA(false);
+        public StartTurnCA startTurnPerformer = new StartTurnCA();
+        public EndTurnCA endTurnPerformer = new EndTurnCA();
+        public RunActionSelectionPhaseCA selectionPhasePerformer = new RunActionSelectionPhaseCA(true);
+        public RunActionExecutionPhaseCA executionPhasePerformer = new RunActionExecutionPhaseCA(true);
 
         public int currentTurn = 0;
 
@@ -101,7 +107,7 @@ namespace RobbieWagnerGames.RPG
                     });
                     break;
                 case CombatState.TURN_START:
-                    CombatActionSystem.Instance.Perform(new StartTurnCA(), () =>
+                    CombatActionSystem.Instance.Perform(startTurnPerformer, () =>
                         {
                             ChangeCombatState(CombatState.ACTION_SELECTION);
                         });
@@ -109,13 +115,13 @@ namespace RobbieWagnerGames.RPG
                 case CombatState.ACTION_SELECTION:
                     currentActingUnit = initiativeOrder[currentInitiativeIndex];
                     CombatHUD.Instance.turnTrackerUIInstance.UpdateTurnTrackerUI(currentTurn, currentActingUnit.isPlayerUnit);
-                    CombatActionSystem.Instance.Perform(new RunActionSelectionPhaseCA(currentActingUnit), () =>
+                    CombatActionSystem.Instance.Perform(selectionPhasePerformer, () =>
                     {
                         ChangeCombatState(CombatState.ACTION_EXECUTION);
                     });
                     break;
                 case CombatState.ACTION_EXECUTION:
-                    CombatActionSystem.Instance.Perform(new RunActionExecutionPhaseCA(currentActingUnit), () =>
+                    CombatActionSystem.Instance.Perform(executionPhasePerformer, () =>
                     {
                         if (currentActingUnit.runtimeStats[ComputedStatType.STAMINA] == 0 
                         || currentActingUnit.GetAvailableCombatMoves().Count == 0)
@@ -134,7 +140,7 @@ namespace RobbieWagnerGames.RPG
                     });
                     break;
                 case CombatState.TURN_END:
-                    CombatActionSystem.Instance.Perform(new EndTurnCA(), () =>
+                    CombatActionSystem.Instance.Perform(endTurnPerformer, () =>
                     {
                         ChangeCombatState(CombatState.TURN_START);
                     });

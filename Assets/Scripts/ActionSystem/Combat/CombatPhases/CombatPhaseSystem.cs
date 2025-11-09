@@ -64,31 +64,36 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null;
 
-            List<CombatMove> moves = action.unit.GetAvailableCombatMoves();
+            Unit unit = action.Unit;
+
+            List<CombatMove> moves = unit.GetAvailableCombatMoves();
 
             if (moves.Count == 0)
             {
-                action.unit.runtimeStats[ComputedStatType.STAMINA] = 0;
+                unit.runtimeStats[ComputedStatType.STAMINA] = 0;
                 yield break;
             }
 
-            action.unit.selectedCombatMove = moves[UnityEngine.Random.Range(0, moves.Count)];
+            unit.selectedCombatMove = moves[UnityEngine.Random.Range(0, moves.Count)];
 
-            Debug.Log($"{action.unit.UnitData.unitName} selected move: {action.unit.selectedCombatMove.moveName}");
+            Debug.Log($"{unit.UnitData.unitName} selected move: {unit.selectedCombatMove.moveName}");
         }
 
         private IEnumerator RunActionExecutionPhasePerformer(RunActionExecutionPhaseCA action)
         {
-            yield return null;
+            Unit unit = action.Unit;
 
-            if (action.unit.selectedCombatMove == null)
+            if (unit.selectedCombatMove == null)
                 yield break;
 
-            CombatMove move = action.unit.selectedCombatMove;
+            yield return StartCoroutine(CombatHUD.Instance.DisplayCombatMoveExecutionDetails(action));
+            CombatMove move = unit.selectedCombatMove;
 
             Debug.Log($"{move.moveName} executed");
-            action.unit.runtimeStats[ComputedStatType.STAMINA] -= move.moveCost; 
-            action.unit.selectedCombatMove = null;
+
+            //TODO: move this to a "CompleteActionExecutionCA" object, so we can add as a reaction, and thus add special reactions when spending stamina
+            unit.runtimeStats[ComputedStatType.STAMINA] -= move.moveCost;
+            unit.selectedCombatMove = null;
         }
 
         private IEnumerator EndTurnPerformer(EndTurnCA action)

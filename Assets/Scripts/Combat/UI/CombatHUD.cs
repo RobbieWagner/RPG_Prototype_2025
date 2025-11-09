@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace RobbieWagnerGames.RPG
         private List<UnitBattleInfoCard> allyUIInfo = new List<UnitBattleInfoCard>();
         private List<UnitBattleInfoCard> enemyUIInfo = new List<UnitBattleInfoCard>();
         [HideInInspector] public TurnTrackerUI turnTrackerUIInstance;
+
+        [SerializeField] private CombatMoveExecutionCard combatMoveExecutionCard;
 
         public void InitializeHUD(List<Unit> allies, List<Unit> enemies)
         {
@@ -43,6 +46,13 @@ namespace RobbieWagnerGames.RPG
                 enemyUIInfo.Add(newCard);
                 topBarObjects.Add(newCard.gameObject);
             }
+        }
+
+        public IEnumerator DisplayCombatMoveExecutionDetails(RunActionExecutionPhaseCA action)
+        {
+            combatMoveExecutionCard.ExecutingMove = action.Unit.selectedCombatMove;
+
+            yield return StartCoroutine(combatMoveExecutionCard.DisplayCombatMoveExecutionDetails());
         }
     }
 }
