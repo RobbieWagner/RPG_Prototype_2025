@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using RobbieWagnerGames.RPG;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,9 +27,30 @@ namespace RobbieWagnerGames.RPG
                 if (unit != null && unit.gameObject == value.gameObject)
                     return;
 
+                if (unit != null)
+                    UnsubscribeFromUnit(unit);
+
                 unit = value;
                 UpdateUnitUI();
+
+                if (unit != null)
+                    SubscribeToUnit(unit);
             }
+        }
+
+        private void SubscribeToUnit(Unit unit)
+        {
+            unit.OnUpdateRuntimeStat += OnUpdateUnitStat;
+        }
+
+        private void UnsubscribeFromUnit(Unit unit)
+        {
+            unit.OnUpdateRuntimeStat -= OnUpdateUnitStat;
+        }
+
+        private void OnUpdateUnitStat(ComputedStatType type, int value)
+        {
+            UpdateUnitUI();
         }
 
         private void UpdateUnitUI()
@@ -44,7 +63,7 @@ namespace RobbieWagnerGames.RPG
 
             hpSlider.minValue = 0;
             hpSlider.maxValue = unit.GetComputedStatDefaultValue(ComputedStatType.HP);
-            hpSlider.value = unit.runtimeStats[ComputedStatType.HP];
+            hpSlider.value = unit.RuntimeStats[ComputedStatType.HP];
 
             ResetStaminaBar();
         }
@@ -53,7 +72,7 @@ namespace RobbieWagnerGames.RPG
         {
             for(int i = 0; i < staminaBits.Count; i++)
             {
-                staminaBits[i].color = unit.runtimeStats[ComputedStatType.STAMINA] > i ? staminaBitActiveColor : staminaBitInactiveColor;
+                staminaBits[i].color = unit.RuntimeStats[ComputedStatType.STAMINA] > i ? staminaBitActiveColor : staminaBitInactiveColor;
             }
         }
     }

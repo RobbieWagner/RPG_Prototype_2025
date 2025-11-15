@@ -16,21 +16,47 @@ namespace RobbieWagnerGames.RPG
     public class CombatActionSystem : MonoBehaviourSingleton<CombatActionSystem>
     {
         private List<GameAction> reactions = null;
-        public bool IsPerforming {get; private set;} = false;
+        private Dictionary<ActionScope, bool> scopeStatus = new Dictionary<ActionScope, bool>()
+        {
+            { ActionScope.UNDEFINED, false},
+            { ActionScope.COMBAT_PHASE, false },
+            { ActionScope.INPUT_PHASE, false },
+            { ActionScope.EXECUTION_PHASE, false },
+            { ActionScope.SUB_EXECUTION_PHASE, false }
+        };
         private static Dictionary<Type, List<Action<GameAction>>> preSubs = new();
         private static Dictionary<Type, List<Action<GameAction>>> postSubs = new();
         private static Dictionary<Type, Func<GameAction, IEnumerator>> performers = new();
-        
+
         public void Perform(GameAction action, Action OnPerformFinished = null)
         {
-            if (IsPerforming) return;
-            IsPerforming = true;
+            if (IsScopeBusy(action.Scope)) 
+                return;
             StartCoroutine(Flow(action, () =>
             {
-                IsPerforming = false;
+                // Callback sets the specific scope to false when finished
+                SetScopeBusy(action.Scope, false);
                 OnPerformFinished?.Invoke();
             }));
         }
+        
+        public IEnumerator PerformCo(GameAction action, Action OnPerformFinished = null)
+        {
+            if (IsScopeBusy(action.Scope)) 
+                yield break;
+            else
+            {
+                yield return Flow(action, () =>
+                {
+                    SetScopeBusy(action.Scope, false);
+                    OnPerformFinished?.Invoke();
+                });
+            }
+        }
+
+        private bool IsScopeBusy(ActionScope scope) => scopeStatus.ContainsKey(scope) && scopeStatus[scope];
+        private void SetScopeBusy(ActionScope scope, bool isBusy) => scopeStatus[scope] = isBusy;
+
 
         public void AddReaction(GameAction gameAction)
         {

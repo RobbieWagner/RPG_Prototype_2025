@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
 {
-    public class DealDamageCA : GameAction
+    public class HealUnitCA : GameAction
     {
         public int amount;
         public Unit unit;
         public override ActionScope Scope => ActionScope.SUB_EXECUTION_PHASE;
-        public DealDamageCA(int amount, Unit unit)
+        public HealUnitCA(int amount, Unit unit)
         {
             this.amount = amount;
             this.unit = unit;

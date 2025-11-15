@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
@@ -16,11 +14,10 @@ namespace RobbieWagnerGames.RPG
             CombatActionSystem.AttachPerformer<EndCombatCA>(EndCombatPerformer);
 
             CombatActionSystem.AttachPerformer<RunActionSelectionPhaseCA>(RunActionSelectionPhasePerformer);
-            CombatActionSystem.AttachPerformer<RunActionExecutionPhaseCA>(RunActionExecutionPhasePerformer);
 
             CombatActionSystem.AttachPerformer<StartTurnCA>(StartTurnPerformer);
             CombatActionSystem.AttachPerformer<EndTurnCA>(EndTurnPerformer);
-        }
+            }
 
         private void OnDisable()
         {
@@ -30,7 +27,6 @@ namespace RobbieWagnerGames.RPG
             CombatActionSystem.DetachPerformer<EndCombatCA>();
 
             CombatActionSystem.DetachPerformer<RunActionSelectionPhaseCA>();
-            CombatActionSystem.DetachPerformer<RunActionExecutionPhaseCA>();
 
             CombatActionSystem.DetachPerformer<StartTurnCA>();
             CombatActionSystem.DetachPerformer<EndTurnCA>();
@@ -57,7 +53,6 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null;
             Debug.Log($"{action.GetType().Name} performed.");
-            // destroy field units, clear ui, tell the combat manager to end the combat
         }
 
         private IEnumerator RunActionSelectionPhasePerformer(RunActionSelectionPhaseCA action)
@@ -66,34 +61,93 @@ namespace RobbieWagnerGames.RPG
 
             Unit unit = action.Unit;
 
-            List<CombatMove> moves = unit.GetAvailableCombatMoves();
-
-            if (moves.Count == 0)
+            if(unit.isPlayerUnit)
+                yield return RunUserActionSelection(unit, action);
+            else
             {
-                unit.runtimeStats[ComputedStatType.STAMINA] = 0;
-                yield break;
+                unit.selectedCombatMove = AutoSelectCombatAction(unit, action);
+                if (unit.selectedCombatMove == null)
+                    yield break;
+                yield return null;
+                unit.selectedTargets = AutoSelectMoveTargets(unit, unit.selectedCombatMove, action);
             }
-
-            unit.selectedCombatMove = moves[UnityEngine.Random.Range(0, moves.Count)];
 
             Debug.Log($"{unit.UnitData.unitName} selected move: {unit.selectedCombatMove.moveName}");
         }
 
-        private IEnumerator RunActionExecutionPhasePerformer(RunActionExecutionPhaseCA action)
+        private IEnumerator RunUserActionSelection(Unit selectingUnit, RunActionSelectionPhaseCA action)
         {
-            Unit unit = action.Unit;
+            yield return null;
 
-            if (unit.selectedCombatMove == null)
+            //TODO: IMPLEMENT!!!!!
+
+            selectingUnit.selectedCombatMove = AutoSelectCombatAction(selectingUnit, action);
+            if (selectingUnit.selectedCombatMove == null)
                 yield break;
+            
+            yield return null;
+            selectingUnit.selectedTargets = AutoSelectMoveTargets(selectingUnit, selectingUnit.selectedCombatMove, action);
+        } 
 
-            yield return StartCoroutine(CombatHUD.Instance.DisplayCombatMoveExecutionDetails(action));
-            CombatMove move = unit.selectedCombatMove;
+        private CombatMove AutoSelectCombatAction(Unit selectingUnit, RunActionSelectionPhaseCA action)
+        {
+            List<CombatMove> moves = selectingUnit.GetAvailableCombatMoves();
 
-            Debug.Log($"{move.moveName} executed");
+            if (moves.Count == 0)
+            {
+                selectingUnit.SetRuntimeStatValue(ComputedStatType.STAMINA, 0);
+                return null;
+            }
 
-            //TODO: move this to a "CompleteActionExecutionCA" object, so we can add as a reaction, and thus add special reactions when spending stamina
-            unit.runtimeStats[ComputedStatType.STAMINA] -= move.moveCost;
-            unit.selectedCombatMove = null;
+            return moves[Random.Range(0, moves.Count)];
+        }
+
+        private List<Unit> AutoSelectMoveTargets(Unit selectingUnit, CombatMove selectedCombatMove, RunActionSelectionPhaseCA action)
+        {
+
+            List<Unit> selectedTargets = new List<Unit>();
+            
+            if(selectedCombatMove.targetsAllUnits) //BUG
+            {
+                return selectedCombatMove.canTargetSelf 
+                    ? action.targetOptions 
+                    : action.targetOptions.Where(x => !x.Equals(selectingUnit)).ToList();
+            } 
+
+            if(selectedCombatMove.targetsAllAllies)
+            {
+                return selectingUnit.isPlayerUnit ? 
+                action.targetOptions.Where(x => x.isPlayerUnit).ToList() :
+                action.targetOptions.Where(x => !x.isPlayerUnit).ToList();
+            }
+
+            if(selectedCombatMove.targetsAllOpposition)
+            {
+                return selectingUnit.isPlayerUnit ? 
+                action.targetOptions.Where(x => !x.isPlayerUnit).ToList() :
+                action.targetOptions.Where(x => x.isPlayerUnit).ToList();
+            }
+
+            List<Unit> validOptions = new List<Unit>();
+
+            if(selectedCombatMove.canTargetAllies)
+                validOptions.AddRange(
+                    selectingUnit.isPlayerUnit 
+                    ? action.targetOptions.Where(x => x.isPlayerUnit && x != selectingUnit).ToList()
+                    : action.targetOptions.Where(x => !x.isPlayerUnit && x != selectingUnit).ToList()
+                );
+            
+            if(selectedCombatMove.canTargetOpposition)
+                validOptions.AddRange(
+                    selectingUnit.isPlayerUnit 
+                    ? action.targetOptions.Where(x => !x.isPlayerUnit).ToList()
+                    : action.targetOptions.Where(x => x.isPlayerUnit).ToList()
+                );
+            
+            if(selectedCombatMove.canTargetSelf)
+                validOptions.Add(selectingUnit);
+
+            return new List<Unit> {validOptions[UnityEngine.Random.Range(0, validOptions.Count)]}; 
         }
 
         private IEnumerator EndTurnPerformer(EndTurnCA action)

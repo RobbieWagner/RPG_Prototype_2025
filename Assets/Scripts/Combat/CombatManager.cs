@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,14 +45,13 @@ namespace RobbieWagnerGames.RPG
         private Unit currentActingUnit = null;
         public Unit CurrentActingUnit => currentActingUnit;
 
-        public StartCombatCA startCombatPerformer = new StartCombatCA();
-        public EndCombatCA winCombatPerformer = new EndCombatCA(true);
-        public EndCombatCA loseCombatPerformer = new EndCombatCA(false);
-        public StartTurnCA startTurnPerformer = new StartTurnCA();
-        public EndTurnCA endTurnPerformer = new EndTurnCA();
-        public RunActionSelectionPhaseCA selectionPhasePerformer = new RunActionSelectionPhaseCA(true);
-        public RunActionExecutionPhaseCA executionPhasePerformer = new RunActionExecutionPhaseCA(true);
-
+        public StartCombatCA startCombatAction = new StartCombatCA();
+        public EndCombatCA winCombatAction = new EndCombatCA(true);
+        public EndCombatCA loseCombatAction = new EndCombatCA(false);
+        public StartTurnCA startTurnAction = new StartTurnCA();
+        public EndTurnCA endTurnAction = new EndTurnCA();
+        public RunActionSelectionPhaseCA selectionPhaseAction = new RunActionSelectionPhaseCA(true);
+        ExecuteCombatMoveCA executionAction = new ExecuteCombatMoveCA();
         public int currentTurn = 0;
 
         protected override void Awake()
@@ -90,12 +90,14 @@ namespace RobbieWagnerGames.RPG
 
         protected virtual void ChangeCombatState(CombatState newState)
         {
-            CurrentState = newState;
+            CurrentState = IsCombatOver() 
+                ? AnyPlayerUnits() ? CombatState.WIN : CombatState.LOSE 
+                : newState;
 
             switch (CurrentState)
             {
                 case CombatState.SETUP:
-                    CombatActionSystem.Instance.Perform(new SetupCombatCA(), () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new SetupCombatCA(), () =>
                     {
                         InitializeRuntimeStatsCA statSetupCombatAction = new InitializeRuntimeStatsCA(allCurrentUnits);
 
@@ -104,27 +106,37 @@ namespace RobbieWagnerGames.RPG
                             CombatHUD.Instance.InitializeHUD(currentPlayerUnits.Values.ToList(), currentEnemyUnits.Values.ToList());
                             ChangeCombatState(CombatState.TURN_START);
                         });
-                    });
+                    }));
                     break;
                 case CombatState.TURN_START:
-                    CombatActionSystem.Instance.Perform(startTurnPerformer, () =>
-                        {
-                            ChangeCombatState(CombatState.ACTION_SELECTION);
-                        });
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(startTurnAction, () =>
+                    {
+                        ChangeCombatState(CombatState.ACTION_SELECTION);
+                    }));
                     break;
                 case CombatState.ACTION_SELECTION:
                     currentActingUnit = initiativeOrder[currentInitiativeIndex];
                     CombatHUD.Instance.turnTrackerUIInstance.UpdateTurnTrackerUI(currentTurn, currentActingUnit.isPlayerUnit);
-                    CombatActionSystem.Instance.Perform(selectionPhasePerformer, () =>
+                    selectionPhaseAction.targetOptions = allCurrentUnits;
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(selectionPhaseAction, () =>
                     {
                         ChangeCombatState(CombatState.ACTION_EXECUTION);
-                    });
+                    }));
                     break;
                 case CombatState.ACTION_EXECUTION:
-                    CombatActionSystem.Instance.Perform(executionPhasePerformer, () =>
+                    executionAction.combatMove = CurrentActingUnit.selectedCombatMove;
+                    executionAction.user = CurrentActingUnit;
+                    executionAction.targets = CurrentActingUnit.selectedTargets;
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(executionAction, () =>
                     {
-                        if (currentActingUnit.runtimeStats[ComputedStatType.STAMINA] == 0 
-                        || currentActingUnit.GetAvailableCombatMoves().Count == 0)
+                        CombatMove move = currentActingUnit.selectedCombatMove;
+
+                        if (move != null) 
+                            currentActingUnit.SetRuntimeStatValue(ComputedStatType.STAMINA, currentActingUnit.RuntimeStats[ComputedStatType.STAMINA] - move.moveCost);
+                        currentActingUnit.selectedCombatMove = null;
+
+                        if (currentActingUnit.RuntimeStats[ComputedStatType.STAMINA] == 0
+                            || currentActingUnit.GetAvailableCombatMoves().Count == 0)
                         {
                             currentInitiativeIndex++;
 
@@ -134,32 +146,49 @@ namespace RobbieWagnerGames.RPG
                                 ChangeCombatState(CombatState.TURN_END);
                         }
                         else
-                        {
                             ChangeCombatState(CombatState.ACTION_SELECTION);
-                        }
-                    });
+                    }));
                     break;
                 case CombatState.TURN_END:
-                    CombatActionSystem.Instance.Perform(endTurnPerformer, () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(endTurnAction, () =>
                     {
                         ChangeCombatState(CombatState.TURN_START);
-                    });
+                    }));
                     break;
                 case CombatState.WIN:
-                    CombatActionSystem.Instance.Perform(new EndCombatCA(true), () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(true), () =>
                     {
                         // Load exploration scene or do other post-combat actions
-                    });
+                    }));
                     break;
                 case CombatState.LOSE:
-                    CombatActionSystem.Instance.Perform(new EndCombatCA(false), () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(false), () =>
                     {
                         // Load game over scene or do other post-combat actions
-                    });
+                    }));
                     break;
                 default:
                     break;
             }
+        }
+
+        private bool AnyPlayerUnits()
+        {
+            return currentPlayerUnits.Values
+                .Where(x => !x.RuntimeStats.TryGetValue(ComputedStatType.HP, out int value) || value > 0)
+                .Any();
+        }
+
+        private bool AnyEnemyUnits()
+        {
+            return currentEnemyUnits.Values
+                .Where(x => !x.RuntimeStats.TryGetValue(ComputedStatType.HP, out int value) || value > 0)
+                .Any();
+        }
+
+        private bool IsCombatOver()
+        {
+            return !AnyPlayerUnits() || !AnyEnemyUnits();
         }
 
         public void SpawnCombatUnitsOnField()
@@ -190,8 +219,11 @@ namespace RobbieWagnerGames.RPG
             allUnits.AddRange(currentPlayerUnits.Values);
             allUnits.AddRange(currentEnemyUnits.Values);
 
+            foreach (Unit unit in allUnits)
+                unit.ResetRuntimeStat(ComputedStatType.STAMINA);
+
             // Sort by speed/initiative stat (highest first)
-            initiativeOrder = allUnits.OrderByDescending(unit => unit.runtimeStats[ComputedStatType.INITIATIVE]).ToList();
+            initiativeOrder = allUnits.OrderByDescending(unit => unit.RuntimeStats[ComputedStatType.INITIATIVE]).ToList();
             currentInitiativeIndex = 0;
         }
     }

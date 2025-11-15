@@ -48,9 +48,9 @@ namespace RobbieWagnerGames.RPG
             }
         }
 
-        public IEnumerator DisplayCombatMoveExecutionDetails(RunActionExecutionPhaseCA action)
+        public IEnumerator DisplayCombatMoveExecutionDetails(CombatMove combatMove)
         {
-            combatMoveExecutionCard.ExecutingMove = action.Unit.selectedCombatMove;
+            combatMoveExecutionCard.ExecutingMove = combatMove;
 
             yield return StartCoroutine(combatMoveExecutionCard.DisplayCombatMoveExecutionDetails());
         }

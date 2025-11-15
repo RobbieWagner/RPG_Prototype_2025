@@ -1,19 +1,18 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
 {
-    public class MakeAttackCA : GameAction
+    public class AttemptDebuffCA : GameAction
     {
-        public Attack attackEffect;
+        public Debuff debuffEffect;
         public Unit user;
         public List<Unit> targets;
         public override ActionScope Scope => ActionScope.EXECUTION_PHASE;
 
-        public MakeAttackCA(Attack attackInfo = null, Unit user = null, List<Unit> targets = null)
+        public AttemptDebuffCA(Debuff effect = null, Unit user = null, List<Unit> targets = null)
         {
-            attackEffect = attackInfo;
+            debuffEffect = effect;
             this.user = user;
             this.targets = targets;
         }

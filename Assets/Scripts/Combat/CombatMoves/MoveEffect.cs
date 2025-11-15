@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
@@ -21,11 +19,6 @@ namespace RobbieWagnerGames.RPG
         [SerializeField][Range(1, 101)] public float accuracy = 101f;
         [SerializeField] private bool failureStopsActionExecution;
         public virtual bool FailureStopsActionExecution => failureStopsActionExecution;
-
-        public virtual bool TryEffectApply(UnitData user, List<UnitData> targets)
-        {
-            return true;
-        }
     }
 
     [Serializable]
@@ -34,13 +27,6 @@ namespace RobbieWagnerGames.RPG
         [Header("Attack")]
         [SerializeField] private int power = 10;
         public int Power => power;
-
-        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
-        {
-            // Implement attack logic here
-            Debug.Log($"{user.unitName} attacks with power {power}!");
-            return true;
-        }
     }
 
     [Serializable]
@@ -49,46 +35,25 @@ namespace RobbieWagnerGames.RPG
         [Header("Heal")]
         [SerializeField] private int healAmount = 10;
         public int HealAmount => healAmount;
-
-        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
-        {
-            // Implement heal logic here
-            Debug.Log($"{user.unitName} heals for {healAmount}!");
-            return true;
-        }
     }
 
     [Serializable]
     public class Buff : MoveEffect
     {
         [Header("Buff")]
-        [SerializeField] private BaseStatType statToBuff = BaseStatType.NONE;
+        [SerializeField] private ComputedStatType statToBuff = ComputedStatType.NONE;
         [SerializeField] private int buffAmount = 5;
-        public BaseStatType StatToBuff => statToBuff;
+        public ComputedStatType StatToBuff => statToBuff;
         public int BuffAmount => buffAmount;
-
-        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
-        {
-            // Implement buff logic here
-            Debug.Log($"{user.unitName} buffs {statToBuff} by {buffAmount}!");
-            return true;
-        }
     }
 
     [Serializable]
     public class Debuff : MoveEffect
     {
         [Header("Debuff")]
-        [SerializeField] private BaseStatType statToDebuff = BaseStatType.NONE;
+        [SerializeField] private ComputedStatType statToDebuff = ComputedStatType.NONE;
         [SerializeField] private int debuffAmount = 5;
-        public BaseStatType StatToDebuff => statToDebuff;
+        public ComputedStatType StatToDebuff => statToDebuff;
         public int DebuffAmount => debuffAmount;
-
-        public override bool TryEffectApply(UnitData user, List<UnitData> targets)
-        {
-            // Implement debuff logic here
-            Debug.Log($"{user.unitName} debuffs {statToDebuff} by {debuffAmount}!");
-            return true;
-        }
     }
 }

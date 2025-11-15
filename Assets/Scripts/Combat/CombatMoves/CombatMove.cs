@@ -14,6 +14,7 @@ namespace RobbieWagnerGames.RPG
         [HideInInspector] public List<GameAction> moveActions = new();
         [TextArea] public string description;
 
+        public bool targetsAllUnits = false;
         public bool targetsAllOpposition;
         public bool targetsAllAllies;
 
@@ -29,32 +30,32 @@ namespace RobbieWagnerGames.RPG
         [ContextMenu(nameof(AddDebuffEffect))] void AddDebuffEffect() { effects.Add(new Debuff()); }
         [ContextMenu(nameof(Clear))] void Clear() { effects.Clear(); }
 
-        public void BuildMoveActions()
-        {
-            moveActions.Clear();
-            foreach (MoveEffect effect in effects)
-            {
-                switch (effect)
-                {
-                    case Attack attack:
-                        moveActions.Add(new MakeAttackCA(attack));
-                        break;
-                    case Heal heal:
-                        moveActions.Add(new HealUnitCA(heal));
-                        break;
-                    case Buff buff:
-                        moveActions.Add(new BuffUnitCA(buff));
-                        break;
-                    case Debuff debuff:
-                        moveActions.Add(new DebuffUnitCA(debuff));
-                        break;
-                }
-            }
-        }
+        // public void BuildMoveActions()
+        // {
+        //     moveActions.Clear();
+        //     foreach (MoveEffect effect in effects)
+        //     {
+        //         switch (effect)
+        //         {
+        //             case Attack attack:
+        //                 moveActions.Add(new MakeAttackCA(attack));
+        //                 break;
+        //             case Heal heal:
+        //                 moveActions.Add(new AttemptHealCA(heal));
+        //                 break;
+        //             case Buff buff:
+        //                 moveActions.Add(new BuffUnitCA(buff));
+        //                 break;
+        //             case Debuff debuff:
+        //                 moveActions.Add(new DebuffUnitCA(debuff));
+        //                 break;
+        //         }
+        //     }
+        // }
         
         public virtual bool isAvailable(Unit unit)
         {
-            return moveCost <= unit.runtimeStats[ComputedStatType.STAMINA];
+            return moveCost <= unit.RuntimeStats[ComputedStatType.STAMINA];
         }
     }
 }

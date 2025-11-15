@@ -1,19 +1,19 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace RobbieWagnerGames.RPG
 {
-    public class MakeAttackCA : GameAction
+    public class AttemptHealCA : GameAction
     {
-        public Attack attackEffect;
+        public Heal healEffect;
+
         public Unit user;
         public List<Unit> targets;
         public override ActionScope Scope => ActionScope.EXECUTION_PHASE;
 
-        public MakeAttackCA(Attack attackInfo = null, Unit user = null, List<Unit> targets = null)
+        public AttemptHealCA(Heal healingEffect = null, Unit user = null, List<Unit> targets = null)
         {
-            attackEffect = attackInfo;
+            this.healEffect = healingEffect;
             this.user = user;
             this.targets = targets;
         }

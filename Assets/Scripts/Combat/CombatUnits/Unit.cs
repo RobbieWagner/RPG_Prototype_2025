@@ -22,10 +22,19 @@ namespace RobbieWagnerGames.RPG
             }
         }
 
-        public Dictionary<ComputedStatType, int> runtimeStats = new Dictionary<ComputedStatType, int>();
+        private readonly Dictionary<ComputedStatType, int> runtimeStats = new Dictionary<ComputedStatType, int>();
+        public IReadOnlyDictionary<ComputedStatType, int> RuntimeStats => runtimeStats;
         public SpriteRenderer unitSpriteRenderer;
         public CombatMove selectedCombatMove = null;
+        public List<Unit> selectedTargets = new List<Unit>();
         public bool isPlayerUnit = true;
+
+        public void SetRuntimeStatValue(ComputedStatType statType, int value)
+        {
+            runtimeStats[statType] = value;
+            OnUpdateRuntimeStat?.Invoke(statType, value);
+        }
+        public Action<ComputedStatType, int> OnUpdateRuntimeStat;
 
         private void UpdateUnitData()
         {
@@ -48,6 +57,18 @@ namespace RobbieWagnerGames.RPG
             runtimeStats.Add(ComputedStatType.MAGIC_POWER, GetComputedStatDefaultValue(ComputedStatType.MAGIC_POWER));
             runtimeStats.Add(ComputedStatType.CRIT_CHANCE, GetComputedStatDefaultValue(ComputedStatType.CRIT_CHANCE));
             runtimeStats.Add(ComputedStatType.INITIATIVE, GetComputedStatDefaultValue(ComputedStatType.INITIATIVE));
+
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.STAMINA, runtimeStats[ComputedStatType.STAMINA]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.ACCURACY, runtimeStats[ComputedStatType.ACCURACY]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.MAGIC_DEFENSE, runtimeStats[ComputedStatType.MAGIC_DEFENSE]);
+            
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.POWER, runtimeStats[ComputedStatType.POWER]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.DEFENSE, runtimeStats[ComputedStatType.DEFENSE]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.HP, runtimeStats[ComputedStatType.HP]);
+            
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.MAGIC_POWER, runtimeStats[ComputedStatType.MAGIC_POWER]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.CRIT_CHANCE, runtimeStats[ComputedStatType.CRIT_CHANCE]);
+            OnUpdateRuntimeStat?.Invoke(ComputedStatType.INITIATIVE, runtimeStats[ComputedStatType.INITIATIVE]);
         }
 
         public void ResetRuntimeStat(ComputedStatType stat)
@@ -93,6 +114,8 @@ namespace RobbieWagnerGames.RPG
                 default:
                     break;
             }
+
+            OnUpdateRuntimeStat?.Invoke(stat, runtimeStats[stat]);
         }
 
         public int GetComputedStatDefaultValue(ComputedStatType stat)
@@ -124,6 +147,7 @@ namespace RobbieWagnerGames.RPG
 
         public List<CombatMove> GetAvailableCombatMoves()
         {
+            //TODO: Enhance by checking if the unit also has at least one action with a valid target
             return unitData.combatMoves.Where(x => x.isAvailable(this)).ToList();
         }
 
@@ -131,15 +155,24 @@ namespace RobbieWagnerGames.RPG
         {
             string statsString = "";
             foreach (var stat in unitData.baseStats)
-            {
                 statsString += $"{stat.Key}: {stat.Value}, ";
-            }
             foreach (var stat in runtimeStats)
-            {
                 statsString += $"{stat.Key}: {stat.Value}, ";
-            }
 
             return $"{unitData.unitName}: {statsString} ";
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other == null || !(other is Unit otherUnit))
+                return false;
+
+            return this.gameObject == otherUnit.gameObject;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.gameObject.GetInstanceID();
         }
     }
 }
