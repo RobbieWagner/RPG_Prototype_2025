@@ -134,19 +134,23 @@ namespace RobbieWagnerGames.RPG
                         if (move != null) 
                             currentActingUnit.SetRuntimeStatValue(ComputedStatType.STAMINA, currentActingUnit.RuntimeStats[ComputedStatType.STAMINA] - move.moveCost);
                         currentActingUnit.selectedCombatMove = null;
+                        currentActingUnit.selectedTargets.Clear();
 
-                        if (currentActingUnit.RuntimeStats[ComputedStatType.STAMINA] == 0
-                            || currentActingUnit.GetAvailableCombatMoves().Count == 0)
+                        if(currentActingUnit.CanAct())
+                            ChangeCombatState(CombatState.ACTION_SELECTION);
+                        else
                         {
-                            currentInitiativeIndex++;
-
+                            while (!currentActingUnit.CanAct() && currentInitiativeIndex < initiativeOrder.Count)
+                            {
+                                currentInitiativeIndex++;
+                                if(currentInitiativeIndex < initiativeOrder.Count) currentActingUnit = initiativeOrder[currentInitiativeIndex];
+                            }
+                            
                             if (currentInitiativeIndex < initiativeOrder.Count)
                                 ChangeCombatState(CombatState.ACTION_SELECTION);
                             else
                                 ChangeCombatState(CombatState.TURN_END);
                         }
-                        else
-                            ChangeCombatState(CombatState.ACTION_SELECTION);
                     }));
                     break;
                 case CombatState.TURN_END:

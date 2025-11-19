@@ -29,6 +29,16 @@ namespace RobbieWagnerGames.RPG
         public List<Unit> selectedTargets = new List<Unit>();
         public bool isPlayerUnit = true;
 
+        public void ModifyRuntimeStat(ComputedStatType stat, int delta)
+        {
+            var newValue = Math.Clamp(
+                RuntimeStats[stat] + delta,
+                0,
+                GetComputedStatDefaultValue(stat));
+            
+            SetRuntimeStatValue(stat, newValue);
+        }
+
         public void SetRuntimeStatValue(ComputedStatType statType, int value)
         {
             runtimeStats[statType] = value;
@@ -173,6 +183,11 @@ namespace RobbieWagnerGames.RPG
         public override int GetHashCode()
         {
             return this.gameObject.GetInstanceID();
+        }
+
+        public bool CanAct()
+        {
+            return runtimeStats[ComputedStatType.HP] > 0 && GetAvailableCombatMoves().Count > 0 && runtimeStats[ComputedStatType.STAMINA] > 0;
         }
     }
 }

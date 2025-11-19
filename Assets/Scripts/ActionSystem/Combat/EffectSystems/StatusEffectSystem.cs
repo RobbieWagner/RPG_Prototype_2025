@@ -26,10 +26,7 @@ namespace RobbieWagnerGames.RPG
             ComputedStatType stat = action.stat;
             int amount = action.amount;
             
-            unit.SetRuntimeStatValue(stat, Math.Clamp(
-                unit.RuntimeStats[stat] + amount,
-                0,
-                unit.GetComputedStatDefaultValue(stat)));
+            unit.ModifyRuntimeStat(stat, amount);
         }
 
         private IEnumerator DebuffUnitPerformer(DebuffUnitCA action)
@@ -40,10 +37,7 @@ namespace RobbieWagnerGames.RPG
             ComputedStatType stat = action.stat;
             int amount = action.amount;
 
-            unit.SetRuntimeStatValue(stat, Math.Clamp(
-                unit.RuntimeStats[stat] - amount,
-                0,
-                unit.GetComputedStatDefaultValue(stat)));
+            unit.ModifyRuntimeStat(stat, -amount);
         }
     }
 }

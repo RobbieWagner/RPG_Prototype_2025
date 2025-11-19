@@ -16,7 +16,7 @@ namespace RobbieWagnerGames.RPG
     public class MoveEffect
     {
         [Header("General")]
-        [SerializeField][Range(1, 101)] public float accuracy = 101f;
+        [SerializeField, Range(1, 101)] public float accuracy = 101f;
         [SerializeField] private bool failureStopsActionExecution;
         public virtual bool FailureStopsActionExecution => failureStopsActionExecution;
     }
@@ -25,7 +25,7 @@ namespace RobbieWagnerGames.RPG
     public class Attack : MoveEffect
     {
         [Header("Attack")]
-        [SerializeField] private int power = 10;
+        [SerializeField, Range(1,100)] private int power = 10;
         public int Power => power;
     }
 
@@ -33,7 +33,7 @@ namespace RobbieWagnerGames.RPG
     public class Heal : MoveEffect
     {
         [Header("Heal")]
-        [SerializeField] private int healAmount = 10;
+        [SerializeField, Range(1,100)] private int healAmount = 10;
         public int HealAmount => healAmount;
     }
 
@@ -42,7 +42,7 @@ namespace RobbieWagnerGames.RPG
     {
         [Header("Buff")]
         [SerializeField] private ComputedStatType statToBuff = ComputedStatType.NONE;
-        [SerializeField] private int buffAmount = 5;
+        [SerializeField, Range(1,5)] private int buffAmount = 5;
         public ComputedStatType StatToBuff => statToBuff;
         public int BuffAmount => buffAmount;
     }
@@ -52,7 +52,7 @@ namespace RobbieWagnerGames.RPG
     {
         [Header("Debuff")]
         [SerializeField] private ComputedStatType statToDebuff = ComputedStatType.NONE;
-        [SerializeField] private int debuffAmount = 5;
+        [SerializeField, Range(1,5)] private int debuffAmount = 5;
         public ComputedStatType StatToDebuff => statToDebuff;
         public int DebuffAmount => debuffAmount;
     }

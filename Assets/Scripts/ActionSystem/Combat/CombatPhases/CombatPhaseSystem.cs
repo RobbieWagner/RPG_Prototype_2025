@@ -79,14 +79,10 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null;
 
-            //TODO: IMPLEMENT!!!!!
+            CombatSelectionUI.Instance.StartActionSelection();
 
-            selectingUnit.selectedCombatMove = AutoSelectCombatAction(selectingUnit, action);
-            if (selectingUnit.selectedCombatMove == null)
-                yield break;
-            
-            yield return null;
-            selectingUnit.selectedTargets = AutoSelectMoveTargets(selectingUnit, selectingUnit.selectedCombatMove, action);
+            while(selectingUnit.selectedCombatMove == null || selectingUnit.selectedTargets == null || !selectingUnit.selectedTargets.Any())
+                yield return null;
         } 
 
         private CombatMove AutoSelectCombatAction(Unit selectingUnit, RunActionSelectionPhaseCA action)
@@ -104,50 +100,7 @@ namespace RobbieWagnerGames.RPG
 
         private List<Unit> AutoSelectMoveTargets(Unit selectingUnit, CombatMove selectedCombatMove, RunActionSelectionPhaseCA action)
         {
-
-            List<Unit> selectedTargets = new List<Unit>();
-            
-            if(selectedCombatMove.targetsAllUnits) //BUG
-            {
-                return selectedCombatMove.canTargetSelf 
-                    ? action.targetOptions 
-                    : action.targetOptions.Where(x => !x.Equals(selectingUnit)).ToList();
-            } 
-
-            if(selectedCombatMove.targetsAllAllies)
-            {
-                return selectingUnit.isPlayerUnit ? 
-                action.targetOptions.Where(x => x.isPlayerUnit).ToList() :
-                action.targetOptions.Where(x => !x.isPlayerUnit).ToList();
-            }
-
-            if(selectedCombatMove.targetsAllOpposition)
-            {
-                return selectingUnit.isPlayerUnit ? 
-                action.targetOptions.Where(x => !x.isPlayerUnit).ToList() :
-                action.targetOptions.Where(x => x.isPlayerUnit).ToList();
-            }
-
-            List<Unit> validOptions = new List<Unit>();
-
-            if(selectedCombatMove.canTargetAllies)
-                validOptions.AddRange(
-                    selectingUnit.isPlayerUnit 
-                    ? action.targetOptions.Where(x => x.isPlayerUnit && x != selectingUnit).ToList()
-                    : action.targetOptions.Where(x => !x.isPlayerUnit && x != selectingUnit).ToList()
-                );
-            
-            if(selectedCombatMove.canTargetOpposition)
-                validOptions.AddRange(
-                    selectingUnit.isPlayerUnit 
-                    ? action.targetOptions.Where(x => !x.isPlayerUnit).ToList()
-                    : action.targetOptions.Where(x => x.isPlayerUnit).ToList()
-                );
-            
-            if(selectedCombatMove.canTargetSelf)
-                validOptions.Add(selectingUnit);
-
-            return new List<Unit> {validOptions[UnityEngine.Random.Range(0, validOptions.Count)]}; 
+            return selectedCombatMove?.GetRandomTargets(selectingUnit, action.targetOptions) ?? new List<Unit>();
         }
 
         private IEnumerator EndTurnPerformer(EndTurnCA action)

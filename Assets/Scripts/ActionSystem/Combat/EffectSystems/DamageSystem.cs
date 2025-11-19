@@ -25,10 +25,7 @@ namespace RobbieWagnerGames.RPG
 
             Debug.Log($"{unit.UnitData.unitName} dealt {amount} damage!");
 
-            unit.SetRuntimeStatValue(ComputedStatType.HP, Math.Clamp(
-                unit.RuntimeStats[ComputedStatType.HP] - amount,
-                0,
-                unit.GetComputedStatDefaultValue(ComputedStatType.HP)));
+            unit.ModifyRuntimeStat(ComputedStatType.HP, -amount);
         }
     }
 }

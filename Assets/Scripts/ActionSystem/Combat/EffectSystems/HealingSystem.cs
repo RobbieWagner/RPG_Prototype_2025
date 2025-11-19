@@ -23,10 +23,7 @@ namespace RobbieWagnerGames.RPG
             Unit unit = action.unit;
             int amount = action.amount;
 
-            unit.SetRuntimeStatValue(ComputedStatType.HP, Math.Clamp(
-                unit.RuntimeStats[ComputedStatType.HP] + amount,
-                0,
-                unit.GetComputedStatDefaultValue(ComputedStatType.HP)));       
+            unit.ModifyRuntimeStat(ComputedStatType.HP, amount);     
         }
     }
 }

@@ -29,29 +29,6 @@ namespace RobbieWagnerGames.RPG
         [ContextMenu(nameof(AddBuffEffect))] void AddBuffEffect() { effects.Add(new Buff()); }
         [ContextMenu(nameof(AddDebuffEffect))] void AddDebuffEffect() { effects.Add(new Debuff()); }
         [ContextMenu(nameof(Clear))] void Clear() { effects.Clear(); }
-
-        // public void BuildMoveActions()
-        // {
-        //     moveActions.Clear();
-        //     foreach (MoveEffect effect in effects)
-        //     {
-        //         switch (effect)
-        //         {
-        //             case Attack attack:
-        //                 moveActions.Add(new MakeAttackCA(attack));
-        //                 break;
-        //             case Heal heal:
-        //                 moveActions.Add(new AttemptHealCA(heal));
-        //                 break;
-        //             case Buff buff:
-        //                 moveActions.Add(new BuffUnitCA(buff));
-        //                 break;
-        //             case Debuff debuff:
-        //                 moveActions.Add(new DebuffUnitCA(debuff));
-        //                 break;
-        //         }
-        //     }
-        // }
         
         public virtual bool isAvailable(Unit unit)
         {
