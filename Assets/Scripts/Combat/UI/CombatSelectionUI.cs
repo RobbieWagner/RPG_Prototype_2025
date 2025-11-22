@@ -15,12 +15,14 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private Button movesButton;
         [SerializeField] private Button itemsButton;
         [SerializeField] private Button fleeButton;
+        [SerializeField] private Button passButton;
 
         [Header("Move Selection Menu")]
         [SerializeField] private GameObject moveSelectionPanel;
         [SerializeField] private Transform moveButtonContainer;
         [SerializeField] private GameObject moveButtonPrefab;
         [SerializeField] private Button moveSelectionBackButton;
+        [SerializeField] private CombatMove passTurnMove;
         
         [Header("Move Information Display")]
         [SerializeField] private GameObject moveInfoDisplay;
@@ -66,6 +68,7 @@ namespace RobbieWagnerGames.RPG
             movesButton.onClick.AddListener(OnMovesButtonClicked);
             itemsButton.onClick.AddListener(OnItemsButtonClicked);
             fleeButton.onClick.AddListener(OnFleeButtonClicked);
+            passButton.onClick.AddListener(OnPassButtonClicked);
 
             moveSelectionBackButton.onClick.AddListener(OnMoveSelectionBackClicked);
             targetSelectionBackButton.onClick.AddListener(OnTargetSelectionBackClicked);
@@ -108,6 +111,7 @@ namespace RobbieWagnerGames.RPG
 
             itemsButton.interactable = true;
             fleeButton.interactable = true;
+            passButton.interactable = true;
         }
 
         private void OnMovesButtonClicked()
@@ -125,6 +129,18 @@ namespace RobbieWagnerGames.RPG
         {
             // Placeholder for flee action
             Debug.Log("Flee button clicked - flee system not implemented");
+        }
+
+        private void OnPassButtonClicked()
+        {
+            selectedMove = passTurnMove;
+            currentSelectingUnit.selectedCombatMove = passTurnMove;
+            
+            currentSelectingUnit.selectedTargets = new List<Unit> { currentSelectingUnit };
+            currentSelectingUnit.SetRuntimeStatValue(ComputedStatType.STAMINA, 0);
+            Debug.Log($"{currentSelectingUnit.UnitData.unitName} passes their turn");
+
+            CompleteActionSelection();
         }
 
         private void ShowMoveSelectionMenu()
@@ -385,6 +401,7 @@ namespace RobbieWagnerGames.RPG
             movesButton.onClick.RemoveAllListeners();
             itemsButton.onClick.RemoveAllListeners();
             fleeButton.onClick.RemoveAllListeners();
+            passButton.onClick.RemoveAllListeners();
             moveSelectionBackButton.onClick.RemoveAllListeners();
             targetSelectionBackButton.onClick.RemoveAllListeners();
         }

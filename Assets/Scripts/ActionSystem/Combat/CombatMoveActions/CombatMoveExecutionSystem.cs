@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace RobbieWagnerGames.RPG
             CombatActionSystem.AttachPerformer<AttemptHealCA>(AttemptHealPerformer);
             CombatActionSystem.AttachPerformer<AttemptBuffCA>(AttemptBuffUnitPerformer);
             CombatActionSystem.AttachPerformer<AttemptDebuffCA>(AttemptDebuffUnitPerformer);
+            CombatActionSystem.AttachPerformer<PassMoveCA>(PassTurnPerformer);
         }
 
         private void OnDisable()
@@ -31,6 +33,7 @@ namespace RobbieWagnerGames.RPG
             CombatActionSystem.DetachPerformer<AttemptHealCA>();
             CombatActionSystem.DetachPerformer<AttemptBuffCA>();
             CombatActionSystem.DetachPerformer<AttemptDebuffCA>();
+            CombatActionSystem.DetachPerformer<PassMoveCA>();
         }
 
         private IEnumerator ExecuteCombatActionPerformer(ExecuteCombatMoveCA action)
@@ -77,6 +80,12 @@ namespace RobbieWagnerGames.RPG
                 if (UnityEngine.Random.Range(0, 100) < action.debuffEffect.accuracy)
                     yield return CombatActionSystem.Instance.PerformCo(new DebuffUnitCA(action.debuffEffect.DebuffAmount, action.debuffEffect.StatToDebuff, target));
             }
+        }
+
+        private IEnumerator PassTurnPerformer(PassMoveCA action)
+        {
+            yield return null;
+            Debug.Log($"{action.user.UnitData.unitName} passing unit turn");
         }
     }
 }

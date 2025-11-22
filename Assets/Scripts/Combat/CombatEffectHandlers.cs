@@ -64,4 +64,14 @@ namespace RobbieWagnerGames.RPG
             yield return CombatActionSystem.Instance.PerformCo(debuffAction);
         }
     }
+
+    public class PassTurnEffectHandler : MoveEffectHandler<Pass>
+    {
+        protected override IEnumerator HandleEffectTyped(Pass effect, Unit user, List<Unit> targets)
+        {
+           var passAction = new PassMoveCA(user);
+
+           yield return CombatActionSystem.Instance.PerformCo(passAction);
+        }
+    }
 }

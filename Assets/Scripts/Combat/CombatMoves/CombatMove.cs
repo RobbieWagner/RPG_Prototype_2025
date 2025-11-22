@@ -22,12 +22,13 @@ namespace RobbieWagnerGames.RPG
         public bool canTargetOpposition;
         public bool canTargetAllies;
 
-        [SerializeReference] public List<MoveEffect> effects;
+        [SerializeReference] public List<MoveEffect> effects = new List<MoveEffect>();
 
         [ContextMenu(nameof(AddAttackEffect))] void AddAttackEffect() { effects.Add(new Attack()); }
         [ContextMenu(nameof(AddHealEffect))] void AddHealEffect() { effects.Add(new Heal()); }
         [ContextMenu(nameof(AddBuffEffect))] void AddBuffEffect() { effects.Add(new Buff()); }
         [ContextMenu(nameof(AddDebuffEffect))] void AddDebuffEffect() { effects.Add(new Debuff()); }
+        [ContextMenu(nameof(AddPassTurnEffect))] void AddPassTurnEffect() {effects.Add(new Pass());}
         [ContextMenu(nameof(Clear))] void Clear() { effects.Clear(); }
         
         public virtual bool isAvailable(Unit unit)

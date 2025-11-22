@@ -22,7 +22,8 @@ namespace RobbieWagnerGames.RPG
                 new AttackEffectHandler(),
                 new HealEffectHandler(),
                 new BuffEffectHandler(),
-                new DebuffEffectHandler()
+                new DebuffEffectHandler(),
+                new PassTurnEffectHandler()
             };
         }
         

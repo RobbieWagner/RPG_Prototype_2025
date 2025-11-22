@@ -56,4 +56,10 @@ namespace RobbieWagnerGames.RPG
         public ComputedStatType StatToDebuff => statToDebuff;
         public int DebuffAmount => debuffAmount;
     }
+
+    [Serializable]
+    public class Pass : MoveEffect
+    {
+
+    }
 }
