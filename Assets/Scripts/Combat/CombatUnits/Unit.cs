@@ -28,6 +28,7 @@ namespace RobbieWagnerGames.RPG
         public CombatMove selectedCombatMove = null;
         public List<Unit> selectedTargets = new List<Unit>();
         public bool isPlayerUnit = true;
+        public int unitListPriority = 0;
 
         public void ModifyRuntimeStat(ComputedStatType stat, int delta)
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -198,19 +197,26 @@ namespace RobbieWagnerGames.RPG
         public void SpawnCombatUnitsOnField()
         {
             currentEnemyUnits = new Dictionary<UnitData, Unit>();
+            currentPlayerUnits = new Dictionary<UnitData, Unit>();
+            
+            int currentPriority = 1;
+            
+            foreach (UnitData allyData in currentCombatDetails.allies)
+            {
+                Unit allyInstance = Instantiate(unitInstancePrefab);
+                allyInstance.UnitData = allyData;
+                allyInstance.isPlayerUnit = true;
+                allyInstance.unitListPriority = currentPriority++;
+                currentPlayerUnits.Add(allyData, allyInstance);
+            }
+
             foreach (UnitData enemyData in currentCombatDetails.enemies)
             {
                 Unit enemyInstance = Instantiate(unitInstancePrefab);
                 enemyInstance.UnitData = enemyData;
                 enemyInstance.isPlayerUnit = false;
+                enemyInstance.unitListPriority = currentPriority++;
                 currentEnemyUnits.Add(enemyData, enemyInstance);
-            }
-            currentPlayerUnits = new Dictionary<UnitData, Unit>();
-            foreach (UnitData allyData in currentCombatDetails.allies)
-            {
-                Unit allyInstance = Instantiate(unitInstancePrefab);
-                allyInstance.UnitData = allyData;
-                currentPlayerUnits.Add(allyData, allyInstance);
             }
         }
 
