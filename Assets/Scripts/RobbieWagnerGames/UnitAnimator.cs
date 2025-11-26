@@ -7,7 +7,7 @@ namespace RobbieWagnerGames
     public enum UnitAnimationState
     {
         //movement
-        Idle = 0,
+        IdleBack = 0,
         IdleForward = 1,
         IdleLeft = 2,
         IdleRight = 3,
@@ -32,7 +32,7 @@ namespace RobbieWagnerGames
         protected virtual void Awake()
         {
             OnAnimationStateChange += StartAnimation;
-            ChangeAnimationState(UnitAnimationState.Idle);
+            ChangeAnimationState(UnitAnimationState.IdleBack);
         }
 
         public void ChangeAnimationState(UnitAnimationState state)

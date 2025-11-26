@@ -177,7 +177,7 @@ namespace RobbieWagnerGames
             else if (movementVector.z > 0)
                 movementAnimator.ChangeAnimationState(UnitAnimationState.IdleForward);
             else
-                movementAnimator.ChangeAnimationState(UnitAnimationState.Idle);
+                movementAnimator.ChangeAnimationState(UnitAnimationState.IdleBack);
         }
 
         private void OnDisable()

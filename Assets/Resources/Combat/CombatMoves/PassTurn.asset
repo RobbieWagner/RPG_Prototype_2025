@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c2d03660d0837c419e285d2a2249a22, type: 3}
   m_Name: PassTurn
   m_EditorClassIdentifier: 
-  moveName: New Move
+  moveName: Pass Turn
   moveIcon: {fileID: 0}
   moveCost: 0
   description: 

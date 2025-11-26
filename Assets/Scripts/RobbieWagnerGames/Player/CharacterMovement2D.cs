@@ -15,7 +15,6 @@ namespace RobbieWagnerGames.Managers
         [SerializeField] private AudioSource footstepAudioSource;
 
         private SpriteRenderer spriteRenderer;
-        private PlayerMovementActions inputActions;
         private HashSet<Collider2D> colliders;
         private Vector2 movementVector = Vector2.zero;
         private Vector3 lastFramePos = Vector3.zero;
@@ -34,7 +33,6 @@ namespace RobbieWagnerGames.Managers
             Instance = this;
             
             spriteRenderer = GetComponent<SpriteRenderer>();
-            inputActions = new PlayerMovementActions();
             colliders = new HashSet<Collider2D>();
             
             InitializeInput();
@@ -42,7 +40,6 @@ namespace RobbieWagnerGames.Managers
 
         private void InitializeInput()
         {
-            inputActions.Enable();
             InputManager.Instance.Controls.EXPLORATION.Move.performed += OnMove;
             InputManager.Instance.Controls.EXPLORATION.Move.canceled += StopPlayer;
         }
@@ -131,7 +128,7 @@ namespace RobbieWagnerGames.Managers
             else if (movementVector.y > 0)
                 unitAnimator.ChangeAnimationState(UnitAnimationState.IdleForward);
             else
-                unitAnimator.ChangeAnimationState(UnitAnimationState.Idle);
+                unitAnimator.ChangeAnimationState(UnitAnimationState.IdleBack);
         }
 
         private void OnDisable()
@@ -154,12 +151,14 @@ namespace RobbieWagnerGames.Managers
 
         public void PlayMovementSounds()
         {
-            footstepAudioSource?.Play();
+            if(footstepAudioSource != null)
+                footstepAudioSource?.Play();
         }
 
         public void StopMovementSounds()
         {
-            footstepAudioSource?.Stop();
+            if(footstepAudioSource != null)
+                footstepAudioSource?.Stop();
         }
 
         private void OnCollisionEnter2D(Collision2D other)

@@ -57,7 +57,7 @@ namespace RobbieWagnerGames.RPG
         {
             base.Awake();
 
-            StartCombat(testCombatDetails);
+            //StartCombat(testCombatDetails);
         }
 
         public virtual void StartCombat(CombatDetails combatDetails)
