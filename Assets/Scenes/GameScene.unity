@@ -163,6 +163,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc84661e92a0ffa439cd26977016a595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &154189758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 154189759}
+  - component: {fileID: 154189760}
+  m_Layer: 0
+  m_Name: JsonDataService
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &154189759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154189758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 291672487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &154189760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154189758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88d2617425db684cb31e25379f20962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &167417148
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +287,7 @@ Transform:
   - {fileID: 1623460380}
   - {fileID: 1899365674}
   - {fileID: 27328703}
+  - {fileID: 154189759}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &460035633
@@ -916,7 +961,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c19fda6ca6ad534fa5b43c4180dfbf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGameExplorationDetails: {fileID: 11400000, guid: 45ee209e6ff5e354b91b202ab7646e3a, type: 2}
+  newGameSceneName: NewGameScene
+  defaultPlayerUnitOptions:
+  - unitName: Unit 1
+    unitIcon: {fileID: 0}
+    baseStats:
+      _serializedList: []
+    computedStats:
+      _serializedList: []
+    combatMoves: []
+    unitSpriteFilePath: 
+    unitColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1623460379
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,7 +1012,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623460379}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1dc2c1b7cbd9a3a4caeb5a5a269c651d, type: 3}
   m_Name: 

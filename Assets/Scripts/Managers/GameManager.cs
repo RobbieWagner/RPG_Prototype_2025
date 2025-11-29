@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using RobbieWagnerGames.UI;
 using RobbieWagnerGames.Utilities;
+using RobbieWagnerGames.Utilities.SaveData;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RobbieWagnerGames.RPG
 {
@@ -12,6 +15,7 @@ namespace RobbieWagnerGames.RPG
         EXPLORATION,
         COMBAT,
         DIALOGUE,
+        MENU,
         PAUSE
     }
 
@@ -19,8 +23,13 @@ namespace RobbieWagnerGames.RPG
     {
         private GameState currentState = GameState.NONE;
         public GameState CurrentState => currentState;
+        private GameSaveData gameSaveData;
+        public GameSaveData SaveData => gameSaveData;
 
-        public ExplorationDetails newGameExplorationDetails;
+        public string newGameSceneName = "NewGameScene";
+        public List<UnitData> defaultPlayerUnitOptions;
+
+        //public ExplorationDetails newGameExplorationDetails;
 
         protected override void Awake()
         {
@@ -31,21 +40,38 @@ namespace RobbieWagnerGames.RPG
             StartCoroutine(StartGame());
         }
 
-        public IEnumerator StartGame()
+        public IEnumerator StartGame(bool newGame = false)
         {
+            yield return null; 
+
             // Load the players save file
-            // Load the exploration details from the players save file
-            yield return null;
+            gameSaveData = LoadGame();
 
-            ExplorationDetails gameSaveDetails = LoadPlayerSaveFile();
+            if(gameSaveData == null || newGame)
+            {
+                Debug.Log("No save data found. Loading new game scene");
+                SceneLoadManager.Instance.LoadSceneAdditive(newGameSceneName);
+            }
+            else
+            {
+                Debug.Log($"Loading game: {gameSaveData.savePlayerName}");
 
-            ExplorationManager.Instance.StartExploration(gameSaveDetails ?? newGameExplorationDetails);
+                if(gameSaveData.currentRunDetails == null)
+                    RunManager.Instance.StartNewRun();
+                else
+                    RunManager.Instance.StartRun(gameSaveData.currentRunDetails);
+            }
+                       
         }
 
-        private ExplorationDetails LoadPlayerSaveFile()
+        private GameSaveData LoadGame()
         {
-            // TODO: IMPLEMENT!
-            return null;
+            return JsonDataService.Instance.LoadDataRelative<GameSaveData>(StaticGameStats.playerSaveDataFilePath, null);
+        }
+
+        public void SaveGame()
+        {
+            JsonDataService.Instance.SaveData(StaticGameStats.playerSaveDataFilePath, gameSaveData);
         }
     }
 }

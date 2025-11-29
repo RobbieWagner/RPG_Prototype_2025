@@ -79,6 +79,8 @@ namespace RobbieWagnerGames
         
         [System.Obsolete("Use ResourcePaths.Sprites instead")]
         public static string spritesFilePath = ResourcePaths.Sprites;
+
+        public const string playerSaveDataFilePath = "playerSaveData.json";
         
         // ... (other obsolete declarations for compatibility)
         #endregion

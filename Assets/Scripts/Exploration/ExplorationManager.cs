@@ -3,7 +3,11 @@ using System.Collections;
 using RobbieWagnerGames.Managers;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using NavMeshPlus.Components;
+using NavMeshPlus.Extensions;
+using RobbieWagnerGames.AI;
 
 namespace RobbieWagnerGames.RPG
 {
@@ -12,6 +16,8 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private ExplorationDetails testExplorationDetails = null;
         [HideInInspector] public ExplorationDetails currentExplorationDetails = null;
         [SerializeField] private CharacterMovement2D defaultPlayerPrefab;
+
+        private NavMeshSurface navMesh = null;
         // Sets up the exploration scene, spawns the player, and relevant random encounter enemies
     
         public virtual void StartExploration(ExplorationDetails explorationDetails)
@@ -48,8 +54,12 @@ namespace RobbieWagnerGames.RPG
 
         private void SpawnOverworldEnemies()
         {
-            // Spawn enemies in the world based on allowed placements (AI NavMesh)
-            // Make sure not to place them too close to the player
+            navMesh = FindFirstObjectByType<NavMeshSurface>();
+
+            if (navMesh != null)
+                navMesh.BuildNavMesh();
+
+            Vector2 spawnPos = (Vector2) NavMeshExtensions.GetRandomNavMeshPositionOnCircle(Vector3.zero, 5f, 2f);
         }
     }
 }
