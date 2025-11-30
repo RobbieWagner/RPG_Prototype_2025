@@ -46,6 +46,7 @@ namespace NavMeshPlus.Components.Editors
             return Matrix4x4.TRS(t.position, t.rotation, Vector3.one);
         }
 
+        [System.Obsolete]
         void AlignTransformToEndPoints(NavMeshLink navLink)
         {
             var mat = UnscaledLocalToWorldMatrix(navLink.transform);
@@ -68,6 +69,7 @@ namespace NavMeshPlus.Components.Editors
             navLink.endPoint = transform.InverseTransformPoint(worldEndPt);
         }
 
+        [System.Obsolete]
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -114,12 +116,14 @@ namespace NavMeshPlus.Components.Editors
             EditorGUILayout.Space();
         }
 
+        [System.Obsolete]
         static Vector3 CalcLinkRight(NavMeshLink navLink)
         {
             var dir = navLink.endPoint - navLink.startPoint;
             return (new Vector3(-dir.z, 0.0f, dir.x)).normalized;
         }
 
+        [System.Obsolete]
         static void DrawLink(NavMeshLink navLink)
         {
             var right = CalcLinkRight(navLink);
@@ -133,7 +137,7 @@ namespace NavMeshPlus.Components.Editors
 
 
         [DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.Active | GizmoType.Pickable)]
-
+        [System.Obsolete]
         static void RenderBoxGizmo(NavMeshLink navLink, GizmoType gizmoType)
         {
             if (!EditorApplication.isPlaying && navLink.isActiveAndEnabled)
@@ -158,6 +162,8 @@ namespace NavMeshPlus.Components.Editors
         }
 
         [DrawGizmo(GizmoType.NotInSelectionHierarchy | GizmoType.Pickable)]
+        [System.Obsolete]
+
         static void RenderBoxGizmoNotSelected(NavMeshLink navLink, GizmoType gizmoType)
         {
             if (!EditorApplication.isPlaying && navLink.isActiveAndEnabled)
@@ -183,6 +189,7 @@ namespace NavMeshPlus.Components.Editors
             Gizmos.DrawIcon(navLink.transform.position, "NavMeshLink Icon", true);
         }
 
+        [System.Obsolete]
         public void OnSceneGUI()
         {
             var navLink = (NavMeshLink)target;

@@ -288,6 +288,7 @@ Transform:
   - {fileID: 1899365674}
   - {fileID: 27328703}
   - {fileID: 154189759}
+  - {fileID: 811805813}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &460035633
@@ -472,7 +473,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -480,6 +480,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -784,6 +785,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &811805812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 811805813}
+  - component: {fileID: 811805814}
+  m_Layer: 0
+  m_Name: RunManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &811805813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811805812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 291672487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &811805814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811805812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c64ec33bb9551d45bfa0c47edb8bcaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RobbieWagnerGames.RPG.RunManager
+  runStartSceneName: RunStartScene
 --- !u!1 &949098762
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,15 +1009,78 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newGameSceneName: NewGameScene
   defaultPlayerUnitOptions:
-  - unitName: Unit 1
-    unitIcon: {fileID: 0}
+  - unitName: Debug Cat
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
     baseStats:
-      _serializedList: []
+      _serializedList:
+      - Key: 0
+        Value: 3
+      - Key: 1
+        Value: 2
+      - Key: 2
+        Value: 1
     computedStats:
       _serializedList: []
-    combatMoves: []
-    unitSpriteFilePath: 
-    unitColor: {r: 0, g: 0, b: 0, a: 0}
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_CircleHead
+    unitColor: {r: 0, g: 1, b: 0.49019608, a: 1}
+  - unitName: Debug Boy
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 1
+      - Key: 1
+        Value: 3
+      - Key: 2
+        Value: 2
+    computedStats:
+      _serializedList: []
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_SquareHead
+    unitColor: {r: 0.49019608, g: 0, b: 1, a: 1}
+  - unitName: Debug Isekai
+    unitIcon: {fileID: 21300000, guid: cb70ee1e645a1754ab857048d60c3a16, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 2
+      - Key: 1
+        Value: 1
+      - Key: 2
+        Value: 3
+    computedStats:
+      _serializedList: []
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
+    - {fileID: 11400000, guid: f43163009db0d41468677d5e2608baf5, type: 2}
+    - {fileID: 11400000, guid: 15cd435334a60f84097248cff333afa6, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_TriangleHead
+    unitColor: {r: 1, g: 0.49019608, b: 0, a: 1}
+  defaultMainPlayerUnit:
+    unitName: Main Player
+    unitIcon: {fileID: -394591486901757920, guid: 8eca4dca107143443a89e99c14018bf9, type: 3}
+    baseStats:
+      _serializedList:
+      - Key: 0
+        Value: 2
+      - Key: 1
+        Value: 2
+      - Key: 2
+        Value: 2
+    computedStats:
+      _serializedList: []
+    combatMoves:
+    - {fileID: 11400000, guid: 2bb5582dfe33eff40a43d532e7c665b8, type: 2}
+    - {fileID: 11400000, guid: 15cd435334a60f84097248cff333afa6, type: 2}
+    - {fileID: 11400000, guid: f43163009db0d41468677d5e2608baf5, type: 2}
+    - {fileID: 11400000, guid: da08bc13e1468764d9e5f635a41c4610, type: 2}
+    unitSpriteFilePath: UnitSprites/Ally_SquareHead
+    unitColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
 --- !u!1 &1623460379
 GameObject:
   m_ObjectHideFlags: 0

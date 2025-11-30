@@ -13,34 +13,58 @@ namespace NavMeshPlus.Components
     {
         [SerializeField, NavMeshAgent]
         int m_AgentTypeID;
+
+        [System.Obsolete]
+
         public int agentTypeID { get { return m_AgentTypeID; } set { m_AgentTypeID = value; UpdateLink(); } }
 
         [SerializeField]
         Vector3 m_StartPoint = new Vector3(0.0f, 0.0f, -2.5f);
+
+        [System.Obsolete]
+
         public Vector3 startPoint { get { return m_StartPoint; } set { m_StartPoint = value; UpdateLink(); } }
 
         [SerializeField]
         Vector3 m_EndPoint = new Vector3(0.0f, 0.0f, 2.5f);
+
+        [System.Obsolete]
+
         public Vector3 endPoint { get { return m_EndPoint; } set { m_EndPoint = value; UpdateLink(); } }
 
         [SerializeField]
         float m_Width;
+
+        [System.Obsolete]
+
         public float width { get { return m_Width; } set { m_Width = value; UpdateLink(); } }
 
         [SerializeField]
         int m_CostModifier = -1;
+
+        [System.Obsolete]
+
         public int costModifier { get { return m_CostModifier; } set { m_CostModifier = value; UpdateLink(); } }
 
         [SerializeField]
         bool m_Bidirectional = true;
+
+        [System.Obsolete]
+
         public bool bidirectional { get { return m_Bidirectional; } set { m_Bidirectional = value; UpdateLink(); } }
 
         [SerializeField]
         bool m_AutoUpdatePosition;
+
+        [System.Obsolete]
+
         public bool autoUpdate { get { return m_AutoUpdatePosition; } set { SetAutoUpdate(value); } }
 
         [SerializeField, NavMeshArea]
         int m_Area;
+
+        [System.Obsolete]
+
         public int area { get { return m_Area; } set { m_Area = value; UpdateLink(); } }
 
         NavMeshLinkInstance m_LinkInstance = new NavMeshLinkInstance();
@@ -50,6 +74,7 @@ namespace NavMeshPlus.Components
 
         static readonly List<NavMeshLink> s_Tracked = new List<NavMeshLink>();
 
+        [System.Obsolete]
         void OnEnable()
         {
             AddLink();
@@ -57,18 +82,21 @@ namespace NavMeshPlus.Components
                 AddTracking(this);
         }
 
+        [System.Obsolete]
         void OnDisable()
         {
             RemoveTracking(this);
             m_LinkInstance.Remove();
         }
 
+        [System.Obsolete]
         public void UpdateLink()
         {
             m_LinkInstance.Remove();
             AddLink();
         }
 
+        [System.Obsolete]
         static void AddTracking(NavMeshLink link)
         {
 #if UNITY_EDITOR
@@ -85,6 +113,7 @@ namespace NavMeshPlus.Components
             s_Tracked.Add(link);
         }
 
+        [System.Obsolete]
         static void RemoveTracking(NavMeshLink link)
         {
             s_Tracked.Remove(link);
@@ -93,6 +122,7 @@ namespace NavMeshPlus.Components
                 NavMesh.onPreUpdate -= UpdateTrackedInstances;
         }
 
+        [System.Obsolete]
         void SetAutoUpdate(bool value)
         {
             if (m_AutoUpdatePosition == value)
@@ -104,6 +134,7 @@ namespace NavMeshPlus.Components
                 RemoveTracking(this);
         }
 
+        [System.Obsolete]
         void AddLink()
         {
 #if UNITY_EDITOR
@@ -137,11 +168,13 @@ namespace NavMeshPlus.Components
             return false;
         }
 
+        [System.Obsolete]
         void OnDidApplyAnimationProperties()
         {
             UpdateLink();
         }
 
+        [System.Obsolete]
         static void UpdateTrackedInstances()
         {
             foreach (var instance in s_Tracked)
@@ -152,6 +185,8 @@ namespace NavMeshPlus.Components
         }
 
 #if UNITY_EDITOR
+        [System.Obsolete]
+
         void OnValidate()
         {
             m_Width = Mathf.Max(0.0f, m_Width);

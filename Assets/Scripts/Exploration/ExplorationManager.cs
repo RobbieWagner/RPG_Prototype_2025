@@ -35,7 +35,6 @@ namespace RobbieWagnerGames.RPG
         {
             currentExplorationDetails = explorationDetails;
             yield return null;
-            Debug.Log(SceneLoadManager.Instance == null);
             yield return SceneLoadManager.Instance.LoadSceneAdditive(explorationDetails.explorationSceneName, () => OnExplorationSceneLoaded()); 
         }
 

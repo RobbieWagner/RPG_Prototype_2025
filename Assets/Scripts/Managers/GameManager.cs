@@ -28,6 +28,7 @@ namespace RobbieWagnerGames.RPG
 
         public string newGameSceneName = "NewGameScene";
         public List<UnitData> defaultPlayerUnitOptions;
+        public UnitData defaultMainPlayerUnit;
 
         //public ExplorationDetails newGameExplorationDetails;
 
@@ -50,7 +51,7 @@ namespace RobbieWagnerGames.RPG
             if(gameSaveData == null || newGame)
             {
                 Debug.Log("No save data found. Loading new game scene");
-                SceneLoadManager.Instance.LoadSceneAdditive(newGameSceneName);
+                StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(newGameSceneName));
             }
             else
             {

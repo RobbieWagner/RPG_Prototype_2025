@@ -35,9 +35,13 @@ namespace RobbieWagnerGames.RPG
             runDetails.unitOptions = GameManager.Instance.defaultPlayerUnitOptions; 
 
             runDetails.PlayerParty.Clear();
-            runDetails.PlayerParty.Add(GameManager.Instance.SaveData.mainPlayerUnit);
+            if (GameManager.Instance.SaveData != null && GameManager.Instance.SaveData.mainPlayerUnit != null)
+                runDetails.playerCustomUnit = GameManager.Instance.SaveData.mainPlayerUnit;
+            else runDetails.playerCustomUnit = GameManager.Instance.defaultMainPlayerUnit;
 
-            SceneLoadManager.Instance.LoadSceneAdditive(runStartSceneName);
+            runDetails.PlayerParty.Add(runDetails.playerCustomUnit);
+
+            StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(runStartSceneName));
         }
 
         // New method to handle run start after unit selection

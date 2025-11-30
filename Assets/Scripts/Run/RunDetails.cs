@@ -11,7 +11,7 @@ public class RunDetails
     [SerializeField] private List<UnitData> playerParty = new List<UnitData>();
     public List<UnitData> PlayerParty => new List<UnitData>(playerParty);
     
-    private UnitData playerCustomUnit;
+    [HideInInspector] public UnitData playerCustomUnit;
 
     public List<UnitData> unitOptions = new List<UnitData>();
     public int runSeed;

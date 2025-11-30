@@ -11,10 +11,16 @@ namespace RobbieWagnerGames.RPG
         [SerializeField] private Canvas canvas;
         [SerializeField] private GridLayoutGroup unitSelectionGrid;
         [SerializeField] private UnitSelectionSprite unitSelectionSpritePrefab;
-        [SerializeField] private List<UnitSelectionSprite> unitSelections = new List<UnitSelectionSprite>();
+        private List<UnitSelectionSprite> unitSelections = new List<UnitSelectionSprite>();
 
         private List<UnitData> unitOptions = new List<UnitData>();
         private int unitsSelected = 0;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            StartUnitSelection();
+        }
 
         public void StartUnitSelection()
         {

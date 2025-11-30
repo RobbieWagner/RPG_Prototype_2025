@@ -7,7 +7,7 @@ namespace RobbieWagnerGames.RPG
 {
     public class UnitSelectionSprite : MonoBehaviour
     {
-        public SpriteRenderer spriteRenderer;
+        public Image spriteRenderer;
         public TextMeshProUGUI unitNameText;
         public Button button;
         public UnitData unitData;

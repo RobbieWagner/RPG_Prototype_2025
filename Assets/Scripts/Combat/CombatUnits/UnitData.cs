@@ -17,7 +17,7 @@ namespace RobbieWagnerGames.RPG
         public Sprite unitIcon;
         [SerializedDictionary("Stat", "Value")]
         public SerializedDictionary<BaseStatType, int> baseStats = new SerializedDictionary<BaseStatType, int>();
-        public SerializedDictionary<ComputedStatType, int> computedStats = new SerializedDictionary<ComputedStatType, int>();
+        [HideInInspector] public SerializedDictionary<ComputedStatType, int> computedStats = new SerializedDictionary<ComputedStatType, int>();
         public List<CombatMove> combatMoves = new List<CombatMove>();
 
         // sprite path for the unit in the resources folder
@@ -33,6 +33,22 @@ namespace RobbieWagnerGames.RPG
 
             if(!resetHealth)
                 computedStats[ComputedStatType.HP] = healthValue;
+        }
+
+        public void InitializeComputedStats(int hp = -1)
+        {
+            computedStats.Clear();
+
+            foreach(ComputedStatType statType in Enum.GetValues(typeof(ComputedStatType)))
+                computedStats.Add(statType, GetComputedStatDefaultValue(statType));
+
+            if(hp > -1)
+                computedStats[ComputedStatType.HP] = hp;
+        }
+
+        public void ResetComputedStat(ComputedStatType statType)
+        {
+            computedStats[statType] = GetComputedStatDefaultValue(statType);
         }
 
         public int GetComputedStatDefaultValue(ComputedStatType stat)
