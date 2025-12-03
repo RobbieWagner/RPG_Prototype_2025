@@ -57,10 +57,7 @@ namespace RobbieWagnerGames.RPG
             {
                 Debug.Log($"Loading game: {gameSaveData.savePlayerName}");
 
-                if(gameSaveData.currentRunDetails == null)
-                    RunManager.Instance.StartNewRun();
-                else
-                    RunManager.Instance.StartRun(gameSaveData.currentRunDetails);
+                RunManager.Instance.PrepRunScene(gameSaveData.currentRunDetails);
             }
                        
         }

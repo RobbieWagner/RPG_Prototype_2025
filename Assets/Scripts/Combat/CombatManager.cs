@@ -22,9 +22,7 @@ namespace RobbieWagnerGames.RPG
     {
         public CombatState CurrentState { get; protected set; } = CombatState.NONE;
 
-        [SerializeField] private CombatDetails testCombatDetails = null;
-        [HideInInspector] public CombatDetails currentCombatDetails = null;
-        
+        public CombatDetails currentCombatDetails {get; private set;}
         
         [SerializeField] private Unit unitInstancePrefab = null;
         [HideInInspector] public Dictionary<UnitData, Unit> currentPlayerUnits;
@@ -57,11 +55,14 @@ namespace RobbieWagnerGames.RPG
         {
             base.Awake();
 
-            //StartCombat(testCombatDetails);
+            currentCombatDetails = null;
+            Debug.Log(currentCombatDetails != null);
         }
 
         public virtual void StartCombat(CombatDetails combatDetails)
         {
+            Debug.Log("hi");
+
             if (currentCombatDetails != null)
             {
                 Debug.LogWarning("Combat is already in progress!");

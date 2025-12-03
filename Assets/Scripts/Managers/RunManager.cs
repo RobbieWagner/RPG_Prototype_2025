@@ -1,7 +1,6 @@
 using System;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RobbieWagnerGames.RPG
 {
@@ -9,30 +8,40 @@ namespace RobbieWagnerGames.RPG
     {
         private RunDetails runDetails;
         public RunDetails RunDetails => runDetails;
-        [SerializeField] private string runStartSceneName = "RunStartScene";
+        [SerializeField] private string runSceneName = "RunScene";
+
+        public RandomNumberGenerator runRNG {get; private set;} 
 
         protected override void Awake()
         {
             base.Awake();
         }
 
-        public void StartRun(RunDetails details)
+        public void PrepRunScene(RunDetails details = null)
         {
             if(details == null)
-                throw new NullReferenceException("Run Details cannot be null. Please provide valid run details or use StartNewRun to begin a new run.");
+                InitializeNewRun();
+            else
+            {
+                runDetails = details;
+                runDetails.newRun = false;
+            }
 
-            runDetails = details;
+            StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(runSceneName, () => StartRun()));
 
             Debug.Log(runDetails);
         }
 
-        public void StartNewRun()
+        private void InitializeNewRun()
         {
             runDetails = new RunDetails();
             
             runDetails.runSeed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-
+            runDetails.rngPulls = 0;
+            runDetails.kerfufflesWon = 0;
+            runDetails.stagesCompleted = 0;
             runDetails.unitOptions = GameManager.Instance.defaultPlayerUnitOptions; 
+            runDetails.newRun = true;
 
             runDetails.PlayerParty.Clear();
             if (GameManager.Instance.SaveData != null && GameManager.Instance.SaveData.mainPlayerUnit != null)
@@ -40,45 +49,34 @@ namespace RobbieWagnerGames.RPG
             else runDetails.playerCustomUnit = GameManager.Instance.defaultMainPlayerUnit;
 
             runDetails.PlayerParty.Add(runDetails.playerCustomUnit);
-
-            StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(runStartSceneName));
         }
 
-        // New method to handle run start after unit selection
+        public void StartRun()
+        {
+            runRNG = new RandomNumberGenerator(runDetails.runSeed, runDetails.rngPulls);
+
+            if(runDetails.newRun)
+                NewRunController.Instance.HandleNewRun(() => RunCombatController.Instance.StartNextCombat(runDetails));
+            else
+                RunCombatController.Instance.StartNextCombat(runDetails);
+        }
+
+        
         public void StartRunAfterUnitSelection()
         {
-            // Validate that we have at least one unit in the party
             if (runDetails?.PlayerParty == null || runDetails.PlayerParty.Count == 0)
-            {
-                Debug.LogError("Cannot start run with empty party!");
-                return;
-            }
+                throw new NullReferenceException("Cannot start run with empty party!");
 
-            SceneManager.UnloadSceneAsync(runStartSceneName);
-
-            StartRun(runDetails);
-        }
-
-        private void InitializeRun()
-        {
-            // Set the random seed for consistent run generation
-            UnityEngine.Random.InitState(runDetails.runSeed);
-
-            // Reset run progress
-            runDetails.kerfufflesWon = 0;
-
-            Debug.Log($"Run started with seed: {runDetails.runSeed} and {runDetails.PlayerParty.Count} units");
+            PrepRunScene(runDetails);
         }
 
         public void EndRun(bool won = false)
         {
-            // Handle run completion logic
             if (won)
                 Debug.Log("Run completed successfully!");
             else
                 Debug.Log("Run failed!");
 
-            // Clear run details
             runDetails = null;
 
             Debug.Log("RUN COMPLETE");

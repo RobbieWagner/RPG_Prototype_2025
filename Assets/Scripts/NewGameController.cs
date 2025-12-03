@@ -12,6 +12,6 @@ public class NewGameController : MonoBehaviour
     private IEnumerator StartNewGame()
     {
         yield return new WaitForSeconds(2f);
-        RunManager.Instance.StartNewRun();
+        RunManager.Instance.PrepRunScene();
     }
 }

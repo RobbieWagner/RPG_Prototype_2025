@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/NewGameScene.unity
     guid: 2e943f9f3d83df847a2e35dc1fb8dd9e
   - enabled: 1
-    path: Assets/Scenes/RunStartScene.unity
+    path: Assets/Scenes/RunScene.unity
     guid: 11761466b0b70164f8a22431bc57cad5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

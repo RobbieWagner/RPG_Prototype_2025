@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RobbieWagnerGames.Utilities;
 using Unity.VisualScripting;
@@ -16,15 +17,24 @@ namespace RobbieWagnerGames.RPG
         private List<UnitData> unitOptions = new List<UnitData>();
         private int unitsSelected = 0;
 
+        private RunDetails _runDetails => RunManager.Instance.RunDetails;
+
+        private System.Action setupCompletionCallback = null;
+
         protected override void Awake()
         {
             base.Awake();
-            StartUnitSelection();
         }
 
-        public void StartUnitSelection()
+        public void HandleNewRun(System.Action callback)
         {
-            unitOptions = RunManager.Instance.RunDetails.unitOptions;
+            setupCompletionCallback = callback;
+            SetupPartyMenu();
+        }
+
+        private void SetupPartyMenu()
+        {
+            unitOptions = _runDetails.unitOptions;
             unitsSelected = 0;
 
             // Clear any existing selection sprites
@@ -43,7 +53,7 @@ namespace RobbieWagnerGames.RPG
 
                 // Add listener for unit selection
                 selectionSprite.button.onClick.AddListener(() => SelectUnit(selectionSprite));
-                
+
                 unitSelections.Add(selectionSprite);
             }
         }
@@ -52,32 +62,43 @@ namespace RobbieWagnerGames.RPG
         {
             if (selectedSprite == null) return;
 
-            // Add unit to player party
-            RunManager.Instance.RunDetails.AddUnitToParty(selectedSprite.unitData);
+            _runDetails.AddUnitToParty(selectedSprite.unitData);
             unitsSelected++;
 
-            // Remove from available options and destroy the sprite
             unitOptions.Remove(selectedSprite.unitData);
             unitSelections.Remove(selectedSprite);
             Destroy(selectedSprite.gameObject);
 
-            // Check if selection is complete
             CheckSelectionComplete();
         }
 
         private void CheckSelectionComplete()
         {
-            if (unitsSelected >= 2)
+            if (_runDetails.PlayerParty.Count >= 3)
                 OnUnitSelectionComplete();
+            else Debug.Log(_runDetails.PlayerParty.Count);
         }
 
         private void OnUnitSelectionComplete()
         {
-            // Hide the selection UI
             canvas.enabled = false;
+            CheckForRunStartCompletion();
+        }
 
-            // Start the actual run
-            RunManager.Instance.StartRunAfterUnitSelection();
+        private void CheckForRunStartCompletion()
+        {
+            if(IsPartySetupComplete()) // Add Other conditions as necessary
+            {
+                if(setupCompletionCallback != null)
+                    setupCompletionCallback.Invoke();
+                else
+                    throw new NullReferenceException("New Run Setup Callback not set. Please ensure the callback is set before trying to setup a new run");
+            }
+        }
+
+        private bool IsPartySetupComplete()
+        {
+            return _runDetails.PlayerParty.Count > 0;
         }
 
         public void CancelUnitSelection()

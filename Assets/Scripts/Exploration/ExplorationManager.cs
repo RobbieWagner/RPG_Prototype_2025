@@ -13,7 +13,7 @@ namespace RobbieWagnerGames.RPG
 {
     public class ExplorationManager : MonoBehaviourSingleton<ExplorationManager>
     {
-        [SerializeField] private ExplorationDetails testExplorationDetails = null;
+        //[SerializeField] private ExplorationDetails testExplorationDetails = null;
         [HideInInspector] public ExplorationDetails currentExplorationDetails = null;
         [SerializeField] private CharacterMovement2D defaultPlayerPrefab;
 

@@ -7,14 +7,17 @@ using UnityEngine;
 public class RunDetails
 {
     public int kerfufflesWon = 0;
+    public int stagesCompleted = 0;
     
-    [SerializeField] private List<UnitData> playerParty = new List<UnitData>();
-    public List<UnitData> PlayerParty => new List<UnitData>(playerParty);
+    private List<UnitData> playerParty = new List<UnitData>();
+    public List<UnitData> PlayerParty => playerParty;
     
     [HideInInspector] public UnitData playerCustomUnit;
 
     public List<UnitData> unitOptions = new List<UnitData>();
     public int runSeed;
+    public int rngPulls;
+    public bool newRun = true;
 
     public void AddUnitToParty(UnitData unit)
     {
@@ -44,6 +47,6 @@ public class RunDetails
 
     public override string ToString()
     {
-        return $"{playerCustomUnit.unitName} save:\nSeed: {runSeed}\nKerfuffles Won{kerfufflesWon}\nParty Size: {playerParty.Count}";
+        return $"{playerCustomUnit.unitName} save:\nSeed: {runSeed}\nStages Completed: {stagesCompleted}\nKerfuffles Won: {kerfufflesWon}\nParty Size: {playerParty.Count}";
     }
 }
