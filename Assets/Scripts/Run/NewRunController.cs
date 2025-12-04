@@ -76,7 +76,6 @@ namespace RobbieWagnerGames.RPG
         {
             if (_runDetails.PlayerParty.Count >= 3)
                 OnUnitSelectionComplete();
-            else Debug.Log(_runDetails.PlayerParty.Count);
         }
 
         private void OnUnitSelectionComplete()

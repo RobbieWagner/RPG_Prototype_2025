@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,26 +44,33 @@ namespace RobbieWagnerGames.RPG
         public Unit CurrentActingUnit => currentActingUnit;
 
         public StartCombatCA startCombatAction = new StartCombatCA();
-        public EndCombatCA winCombatAction = new EndCombatCA(true);
-        public EndCombatCA loseCombatAction = new EndCombatCA(false);
         public StartTurnCA startTurnAction = new StartTurnCA();
         public EndTurnCA endTurnAction = new EndTurnCA();
         public RunActionSelectionPhaseCA selectionPhaseAction = new RunActionSelectionPhaseCA(true);
         ExecuteCombatMoveCA executionAction = new ExecuteCombatMoveCA();
         public int currentTurn = 0;
 
+        // Add this event
+        public event Action<CombatOutcome> OnCombatEnded;
+        
+        // Define outcome data
+        public class CombatOutcome
+        {
+            public bool playerWon;
+            public CombatDetails combatDetails;
+            public int enemiesDefeated;
+            // Add any other relevant data
+        }
+
         protected override void Awake()
         {
             base.Awake();
 
             currentCombatDetails = null;
-            Debug.Log(currentCombatDetails != null);
         }
 
         public virtual void StartCombat(CombatDetails combatDetails)
         {
-            Debug.Log("hi");
-
             if (currentCombatDetails != null)
             {
                 Debug.LogWarning("Combat is already in progress!");
@@ -160,15 +168,25 @@ namespace RobbieWagnerGames.RPG
                     }));
                     break;
                 case CombatState.WIN:
-                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(true), () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(true, currentCombatDetails.combatSceneName), () =>
                     {
-                        // Load exploration scene or do other post-combat actions
+                        currentCombatDetails = null;
+                        OnCombatEnded?.Invoke(new CombatOutcome 
+                        {
+                            playerWon = true,
+                            combatDetails = currentCombatDetails
+                        });
                     }));
                     break;
                 case CombatState.LOSE:
-                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(false), () =>
+                    StartCoroutine(CombatActionSystem.Instance.PerformCo(new EndCombatCA(false, currentCombatDetails.combatSceneName), () =>
                     {
-                        // Load game over scene or do other post-combat actions
+                        currentCombatDetails = null;
+                        OnCombatEnded?.Invoke(new CombatOutcome 
+                        { 
+                            playerWon = false,
+                            combatDetails = currentCombatDetails
+                        });
                     }));
                     break;
                 default:

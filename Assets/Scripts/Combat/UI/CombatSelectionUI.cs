@@ -382,8 +382,6 @@ namespace RobbieWagnerGames.RPG
             availableTargets?.Clear();
             currentlyHoveredMove = null;
             currentlyHoveredTarget = null;
-
-            Debug.Log("Action selection completed");
         }
 
         public void CancelSelection()

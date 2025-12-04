@@ -35,7 +35,6 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator StartCombatPerformer(StartCombatCA action)
         {
             yield return null;
-            Debug.Log($"{action.GetType().Name} performed.");
 
             CombatManager.Instance.SpawnCombatUnitsOnField();
         }
@@ -43,7 +42,6 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator InitializeRuntimeStatsPerformer(InitializeRuntimeStatsCA action)
         {
             yield return null;
-            Debug.Log($"{action.GetType().Name} performed.");
 
             foreach (Unit unit in action.units)
                 unit.ResetRuntimeStats();
@@ -51,8 +49,7 @@ namespace RobbieWagnerGames.RPG
 
         private IEnumerator EndCombatPerformer(EndCombatCA action)
         {
-            yield return null;
-            Debug.Log($"{action.GetType().Name} performed.");
+            yield return SceneLoadManager.Instance.UnloadScene(action.combatSceneName);
         }
 
         private IEnumerator RunActionSelectionPhasePerformer(RunActionSelectionPhaseCA action)
@@ -71,8 +68,6 @@ namespace RobbieWagnerGames.RPG
                 yield return null;
                 unit.selectedTargets = AutoSelectMoveTargets(unit, unit.selectedCombatMove, action);
             }
-
-            Debug.Log($"{unit.UnitData.unitName} selected move: {unit.selectedCombatMove.moveName}");
         }
 
         private IEnumerator RunUserActionSelection(Unit selectingUnit, RunActionSelectionPhaseCA action)
@@ -106,7 +101,6 @@ namespace RobbieWagnerGames.RPG
         private IEnumerator EndTurnPerformer(EndTurnCA action)
         {
             yield return null;
-            Debug.Log($"{ action.GetType().Name } performed.");
         }
 
         private IEnumerator StartTurnPerformer(StartTurnCA action)
@@ -114,7 +108,6 @@ namespace RobbieWagnerGames.RPG
             yield return null;
             CombatManager.Instance.currentTurn++;
             CombatManager.Instance.BuildTurnInitiativeOrder();
-            Debug.Log($"{action.GetType().Name} performed.");
             foreach (Unit unit in CombatManager.Instance.allCurrentUnits)
                 unit.ResetRuntimeStat(ComputedStatType.STAMINA);
         }

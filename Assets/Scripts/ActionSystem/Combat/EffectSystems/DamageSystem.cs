@@ -23,8 +23,6 @@ namespace RobbieWagnerGames.RPG
             Unit unit = action.unit;
             int amount = action.amount;
 
-            Debug.Log($"{unit.UnitData.unitName} dealt {amount} damage!");
-
             unit.ModifyRuntimeStat(ComputedStatType.HP, -amount);
         }
     }

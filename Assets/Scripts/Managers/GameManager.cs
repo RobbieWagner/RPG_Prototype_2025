@@ -45,20 +45,12 @@ namespace RobbieWagnerGames.RPG
         {
             yield return null; 
 
-            // Load the players save file
             gameSaveData = LoadGame();
 
             if(gameSaveData == null || newGame)
-            {
-                Debug.Log("No save data found. Loading new game scene");
                 StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(newGameSceneName));
-            }
             else
-            {
-                Debug.Log($"Loading game: {gameSaveData.savePlayerName}");
-
                 RunManager.Instance.PrepRunScene(gameSaveData.currentRunDetails);
-            }
                        
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using RobbieWagnerGames.Utilities;
 using UnityEngine;
 
@@ -10,11 +11,16 @@ namespace RobbieWagnerGames.RPG
         public RunDetails RunDetails => runDetails;
         [SerializeField] private string runSceneName = "RunScene";
 
+        private Coroutine endCombatCoroutine = null;
+
         public RandomNumberGenerator runRNG {get; private set;} 
 
         protected override void Awake()
         {
             base.Awake();
+
+            // Subscribe to combat ended event
+            CombatManager.Instance.OnCombatEnded += HandleCombatEnded;
         }
 
         public void PrepRunScene(RunDetails details = null)
@@ -28,8 +34,6 @@ namespace RobbieWagnerGames.RPG
             }
 
             StartCoroutine(SceneLoadManager.Instance.LoadSceneAdditive(runSceneName, () => StartRun()));
-
-            Debug.Log(runDetails);
         }
 
         private void InitializeNewRun()
@@ -81,5 +85,36 @@ namespace RobbieWagnerGames.RPG
 
             Debug.Log("RUN COMPLETE");
         }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (CombatManager.Instance != null)
+                CombatManager.Instance.OnCombatEnded -= HandleCombatEnded;
+        }
+
+        private void HandleCombatEnded(CombatManager.CombatOutcome outcome)
+        {
+            if (endCombatCoroutine != null)
+                return;
+
+            endCombatCoroutine = StartCoroutine(HandleCombatEndedCo(outcome));
+        }
+
+        private IEnumerator HandleCombatEndedCo(CombatManager.CombatOutcome outcome)
+        {
+            if (outcome.playerWon)
+            {
+                yield return new WaitForSeconds(2f);
+                runDetails.kerfufflesWon++;
+                RunCombatController.Instance.StartNextCombat(runDetails);
+            }
+            else
+            {
+                EndRun(false);
+            }
+        }
+
     }
 }
